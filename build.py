@@ -43,8 +43,8 @@ def format_timestamp(utc_ts):
     return dt.strftime(TIME_FORMAT)
 
 def get_filetime_from_git(path: str):
-    cmd = f"git log --pretty=\"format:%ct\" -- \"{path}\""
-    proc = subprocess.run(cmd, stdout=subprocess.PIPE)
+    args = ["git", "log", "--pretty=%at", "--", path]
+    proc = subprocess.run(args, stdout=subprocess.PIPE)
     if len(proc.stdout)==0:
         return FileTime(format_timestamp(0), format_timestamp(0))
     out = proc.stdout.decode()
