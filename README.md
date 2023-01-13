@@ -1,2 +1,5 @@
 # simple-blog
-GitHub博客
+
+txt-style static blog site generator  
+
+[Demo](https://cytmwia.github.io/simple-blog/)  
