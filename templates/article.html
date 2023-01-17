@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
+    <title>{{ article.title }}</title>
     <style>
         img {
             max-width: 100%;
@@ -18,7 +18,16 @@
 </head>
 
 <body>
-    <strong>{{ article.title }}</strong>
+    <table>
+        <tbody>
+            <tr>
+                <td><a href="/">{{ blog_name }}</a></td>
+                <td>/</td>
+                <td><strong>{{ article.title }}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
     <table>
         <tbody>
             <tr>
@@ -33,7 +42,9 @@
             {% endif %}
         </tbody>
     </table>
+
     <hr>
+
     <article>{{ article.html|safe }}</article>
 </body>
 

@@ -128,7 +128,7 @@ def main():
         art.link = os.path.basename(art.path)+".html"
 
     write("index.html", load_template("index.html").render(
-        title=config["blog_title"],
+        blog_name=config["blog_name"],
         about=about,
         articles=articles,
     ))
@@ -137,7 +137,7 @@ def main():
     for art in articles:
         print(art)
         write(art.link, article_template.render(
-            title=art.title,
+            blog_name=config["blog_name"],
             article=art
         ))
 
