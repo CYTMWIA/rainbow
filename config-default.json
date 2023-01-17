@@ -1,5 +1,8 @@
 {
     "blog_name": "Simple Blog",
+    "timezone": "+0800",
+    "format_datetime": "%y/%m/%d %H:%M",
+    "format_datetime_full": "%Y/%m/%d %H:%M:%S %z",
     "mathjax_src": "https://unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js",
     "output_dir": "./output",
     "content_dir": "./content",

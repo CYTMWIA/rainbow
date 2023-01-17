@@ -32,12 +32,12 @@
         <tbody>
             <tr>
                 <td>Published</td>
-                <td>{{ article.pub_time }}</td>
+                <td>{{ article.pub_time|datetime_full }}</td>
             </tr>
             {% if article.mod_time %}
             <tr>
                 <td>Modified</td>
-                <td>{{ article.mod_time }}</td>
+                <td>{{ article.mod_time|datetime_full }}</td>
             </tr>
             {% endif %}
         </tbody>
