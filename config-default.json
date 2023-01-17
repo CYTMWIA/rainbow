@@ -1,0 +1,7 @@
+{
+    "blog_title": "Simple Blog",
+    "mathjax_src": "https://unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js",
+    "output_dir": "./output",
+    "content_dir": "./content",
+    "templates_dir": "./templates"
+}
