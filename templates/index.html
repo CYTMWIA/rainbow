@@ -22,7 +22,7 @@
         <tbody>
             {% for article in articles %}
             <tr>
-                <td>{{ article.time.ctime }}</td>
+                <td>{{ article.pub_time }}</td>
                 <td><a href="{{ article.link }}">{{ article.title }}</a></td>
             </tr>
             {% endfor %}

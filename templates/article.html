@@ -19,10 +19,20 @@
 
 <body>
     <strong>{{ article.title }}</strong>
-    <div>Published: {{ article.time.ctime }}</div>
-    {% if article.time.ctime!=article.time.mtime %}
-    <div>Last Modified: {{ article.time.mtime }}</div>
-    {% endif %}
+    <table>
+        <tbody>
+            <tr>
+                <td>Published</td>
+                <td>{{ article.pub_time }}</td>
+            </tr>
+            {% if article.mod_time %}
+            <tr>
+                <td>Modified</td>
+                <td>{{ article.mod_time }}</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
     <hr>
     <article>{{ article.html|safe }}</article>
 </body>
