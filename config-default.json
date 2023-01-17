@@ -3,5 +3,6 @@
     "mathjax_src": "https://unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js",
     "output_dir": "./output",
     "content_dir": "./content",
-    "templates_dir": "./templates"
+    "templates_dir": "./templates",
+    "server_python_path": "./venv/Scripts/python.exe"
 }

@@ -2,3 +2,5 @@ venv
 output
 dist
 config.json
+
+**\__pycache__
