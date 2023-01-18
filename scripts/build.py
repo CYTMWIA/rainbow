@@ -8,7 +8,7 @@ import shutil
 import jinja2
 import markdown
 import md4mathjax
-from common import load_config, ls, make_time_formatter, open
+from common import load_config, ls, open, split_front_matter
 
 
 class Article:
@@ -25,62 +25,34 @@ class Article:
         return f"{self.__class__.__name__}({str(d)})"
 
 
-class ArticleLoader:
-    def __init__(self, mathjax_src=None, time_format=None) -> None:
-        assert (mathjax_src != None)
-        assert (time_format != None)
-        self.mathjax_src = mathjax_src
-        self.time_format = time_format
-
-    def __take_front_matter(self, raw_text: str):
-        if raw_text.startswith("{"):
-            split_point, stack, flag_string = None, 0, ""
-            for i, c in enumerate(raw_text):
-                if len(flag_string):
-                    if c == flag_string:
-                        flag_string = ""
-                else:
-                    if c == "{":
-                        stack += 1
-                    elif c == "}":
-                        stack -= 1
-                    elif c in "'\"":
-                        flag_string = c
-                    if stack == 0:
-                        split_point = i+1
-                        break
-            if split_point:
-                front = json.loads(raw_text[:split_point])
-                text = raw_text[split_point:].lstrip("\n")
-                return front, text
-        return {}, raw_text
-
-    def load(self, path: str):
+def make_article_loader(mathjax_src=None, time_format=None):
+    def load(path: str):
         art = Article()
 
         art.path = path
         with open(path, "r") as f:
             raw = f.read()
 
-        front, text = self.__take_front_matter(raw)
+        front, text = split_front_matter(raw)
         art.title = front.get("title", os.path.basename(path))
         art.pub_time = front.get("pub_time", None)
         art.mod_time = front.get("mod_time", None)
         strptime = datetime.datetime.strptime
         if art.pub_time != None:
-            art.pub_time = strptime(art.pub_time, self.time_format).timestamp()
+            art.pub_time = strptime(art.pub_time, time_format).timestamp()
         if art.mod_time != None:
-            art.mod_time = strptime(art.mod_time, self.time_format).timestamp()
+            art.mod_time = strptime(art.mod_time, time_format).timestamp()
 
         art.html = markdown.markdown(text, extensions=[
             # https://python-markdown.github.io/extensions/
             "markdown.extensions.extra",
             "markdown.extensions.toc",
             "markdown_del_ins",
-            md4mathjax.makeExtension(mathjax_src=self.mathjax_src)
+            md4mathjax.makeExtension(mathjax_src=mathjax_src)
         ])
 
         return art
+    return load
 
 
 def make_template_loader(templates_dir: str, filters={}):
@@ -112,15 +84,15 @@ def main():
     config = load_config()
 
     filters = {
-        "datetime": make_time_formatter(config["format_datetime"], config["timezone"]),
-        "datetime_full": make_time_formatter(config["format_datetime_full"], config["timezone"])
+        "datetime": config.format_datetime,
+        "datetime_full":  config.format_datetime_full
     }
     use_template = make_template_loader(config["templates_dir"], filters)
     write, copy = make_output_functions(config["output_dir"])
-    load_article = ArticleLoader(
+    load_article = make_article_loader(
         config["mathjax_src"],
         config["format_datetime_full"]
-    ).load
+    )
 
     about = None
     articles = []
