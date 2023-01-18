@@ -10,7 +10,7 @@ def main():
     subprocess.Popen(["python", "-m", "http.server"], cwd=config["output_dir"])
     last = 0
     while True:
-        latest = sorted([os.path.getmtime(p) for p in lsr("./content")])[-1]
+        latest = tuple([os.path.getmtime(p) for p in lsr("./content")])
         if last != latest:
             subprocess.run([config["server_python_path"], "scripts/build.py"])
         last = latest
