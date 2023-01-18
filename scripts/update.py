@@ -45,7 +45,7 @@ def main():
                 continue
             print("UPDATE", path)
             front["mod_time"] = config.formatter.datetime_full(time.time())
-            new_raw = json.dumps(front, indent=4)+"\n"+text
+            new_raw = json.dumps(front, indent=4, ensure_ascii=False)+"\n"+text
             with open(path, "w") as f:
                 f.write(new_raw)
 

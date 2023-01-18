@@ -17,7 +17,6 @@ class Article:
     mod_time: str
     html: str
     path: str
-    link: None | str = None
 
     def __str__(self) -> str:
         d = vars(self).copy()
@@ -118,7 +117,6 @@ def main():
     for art in articles:
         # path is not *file system path* anymore, it's path in *url* now.
         art.path = os.path.basename(art.path)+".html"
-        art.link = urllib.parse.urljoin(config["blog_host"], art.path)
 
     write("index.html", use_template("index.html").render(
         blog_name=config["blog_name"],
@@ -129,7 +127,7 @@ def main():
 
     write("rss.xml", use_template("rss.xml").render(
         blog_name=config["blog_name"],
-        blog_host=config["blog_host"],
+        blog_url=config["blog_url"].rstrip("/"),
         articles=articles,
     ))
 

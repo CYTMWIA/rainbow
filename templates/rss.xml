@@ -2,15 +2,15 @@
 <rss version="2.0">
 <channel>
   <title>{{ blog_name }}</title>
-  <link>{{ blog_host }}</link>
+  <link>{{ blog_url }}</link>
   <description>{{ blog_name }}</description>
   {% for article in articles %}
   <item>
     <title>{{ article.title }}</title>
-    <link>{{ article.link }}</link>
+    <link>{{ blog_url }}/{{ article.path }}</link>
     <pubDate>{{ article.pub_time|datetime_rfc2822 }}</pubDate>
     <description>{{ article.html }}</description>
   </item>
   {% endfor %}
 </channel>
-</rss> 
+</rss>

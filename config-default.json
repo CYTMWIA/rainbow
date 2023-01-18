@@ -1,6 +1,6 @@
 {
     "blog_name": "Simple Blog",
-    "blog_host": "//127.0.0.1:8000/",
+    "blog_url": "https://cytmwia.github.io/simple-blog/",
     "css": "simple-style.css",
     "timezone": "+0800",
     "format_datetime": "%y/%m/%d %H:%M",
