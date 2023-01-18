@@ -14,14 +14,16 @@ img {
 }
 
 pre,
-:not(pre)>code {
+code {
     background-color: #afb8c133;
-    padding: .4em;
+    padding: .1em .4em;
     border-radius: 6px;
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
 }
 
-:not(pre)>code {
-    padding: .1em .4em;
+pre>code {
+    padding: 0;
+    background-color: unset;
 }
 
 article table {
