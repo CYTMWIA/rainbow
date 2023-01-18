@@ -5,6 +5,6 @@ Features:
 - Markdown (support by [Python-Markdown](https://python-markdown.github.io/#python-markdown))  
 - Mathematics (support by [MathJax](https://www.mathjax.org/))  
 - Auto Deploy to GitHub Pages by [Actions](https://github.com/CYTMWIA/simple-blog/tree/master/.github/workflows)  
-- [RSS](/rss.xml)  
+- [RSS](./rss.xml)  
 
 [repo](https://github.com/CYTMWIA/simple-blog)  
