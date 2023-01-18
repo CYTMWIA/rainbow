@@ -32,18 +32,37 @@ def parse_timezone(s: str):
     return datetime.timezone(datetime.timedelta(hours=hours, minutes=mins))
 
 
+class Formatter:
+    def __init__(self, tz: datetime.timezone = None, format_datetime: str = None, format_datetime_full: str = None) -> None:
+        assert (tz != None)
+        assert (format_datetime != None)
+        assert (format_datetime_full != None)
+
+        self.datetime = make_time_formatter(
+            format_datetime, tz
+        )
+        self.datetime_full = make_time_formatter(
+            format_datetime_full, tz
+        )
+        self.datetime_rfc2822 = make_time_formatter(
+            "%a, %d %b %Y %H:%M:%S %z", tz
+        )
+
+
 class Config(dict):
+    timezone: datetime.timezone
+    formatter: Formatter
+
     def __init__(self, raw_dict: dict):
         super().__init__(raw_dict)
 
     @staticmethod
     def __specialize_config(config):
         config.timezone = parse_timezone(config["timezone"])
-        config.format_datetime = make_time_formatter(
-            config["format_datetime"], config.timezone
-        )
-        config.format_datetime_full = make_time_formatter(
-            config["format_datetime_full"], config.timezone
+        config.formatter = Formatter(
+            config.timezone,
+            config["format_datetime"],
+            config["format_datetime_full"],
         )
 
     @staticmethod

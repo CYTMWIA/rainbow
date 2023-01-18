@@ -17,7 +17,7 @@ def main():
     with open(path, "w") as f:
         f.write(json.dumps({
             "title": filename,
-            "pub_time": config.format_datetime_full(time.time()),
+            "pub_time": config.formatter.datetime_full(time.time()),
             "mod_time": None
         }, indent=4))
     print("CREATE", path)

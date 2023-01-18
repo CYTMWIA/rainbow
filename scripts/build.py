@@ -1,9 +1,9 @@
 #! /usr/bin/python3
 
 import datetime
-import json
 import os
 import shutil
+import urllib.parse
 
 import jinja2
 import markdown
@@ -84,8 +84,9 @@ def main():
     config = load_config()
 
     filters = {
-        "datetime": config.format_datetime,
-        "datetime_full":  config.format_datetime_full
+        "datetime": config.formatter.datetime,
+        "datetime_full":  config.formatter.datetime_full,
+        "datetime_rfc2822": config.formatter.datetime_rfc2822
     }
     use_template = make_template_loader(config["templates_dir"], filters)
     write, copy = make_output_functions(config["output_dir"])
@@ -110,7 +111,9 @@ def main():
 
     articles.sort(key=lambda a: a.pub_time, reverse=True)
     for art in articles:
-        art.link = os.path.basename(art.path)+".html"
+        # path is not *file system path* anymore, it's path in *url* now.
+        art.path = os.path.basename(art.path)+".html"
+        art.link = urllib.parse.urljoin(config["blog_host"], art.path)
 
     write("index.html", use_template("index.html").render(
         blog_name=config["blog_name"],
@@ -118,10 +121,16 @@ def main():
         articles=articles,
     ))
 
+    write("rss.xml", use_template("rss.xml").render(
+        blog_name=config["blog_name"],
+        blog_host=config["blog_host"],
+        articles=articles,
+    ))
+
     article_template = use_template("article.html")
     for art in articles:
         print(art)
-        write(art.link, article_template.render(
+        write(art.path, article_template.render(
             blog_name=config["blog_name"],
             article=art
         ))
