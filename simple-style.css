@@ -1,0 +1,40 @@
+.main {
+    width: 80ch;
+    min-height: 95vh;
+    padding: 0 1ch;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 6px;
+    border: solid 1px lightgray;
+    line-height: 1.5em;
+}
+
+img {
+    max-width: 100%;
+}
+
+pre,
+:not(pre)>code {
+    background-color: #afb8c133;
+    padding: .4em;
+    border-radius: 6px;
+}
+
+:not(pre)>code {
+    padding: .1em .4em;
+}
+
+article table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+article th,
+article td {
+    border: solid 1px lightgray;
+
+}
+
+article table tr:nth-child(2n) {
+    background-color: #f8f8f8;
+}

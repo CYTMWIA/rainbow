@@ -6,29 +6,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ blog_name }}</title>
+    <style>
+        /* Avoid Formatter {{user_css}}  */
+    </style>
 </head>
 
 <body>
-    <h1>{{ blog_name }}</h1>
+    <div class="main">
+        <h1>{{ blog_name }}</h1>
 
-    {% if about %}
-    <h2>About</h2>
-    <article> {{ about.html|safe }} </article>
-    {% endif %}
+        {% if about %}
+        <h2>About</h2>
+        <article> {{ about.html|safe }} </article>
+        {% endif %}
 
-    {% if articles %}
-    <h2>Articles</h2>
-    <table>
-        <tbody>
-            {% for article in articles %}
-            <tr>
-                <td>{{ article.pub_time|datetime }}</td>
-                <td><a href="{{ article.link }}">{{ article.title }}</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% endif %}
+        {% if articles %}
+        <h2>Articles</h2>
+        <table>
+            <tbody>
+                {% for article in articles %}
+                <tr>
+                    <td>{{ article.pub_time|datetime }}</td>
+                    <td><a href="{{ article.link }}">{{ article.title }}</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
 </body>
 
 </html>

@@ -2,7 +2,7 @@ import os
 import subprocess
 import time
 
-from common import load_config, lsr
+from common import load_config, ls, lsr
 
 
 def main():
@@ -10,7 +10,13 @@ def main():
     subprocess.Popen(["python", "-m", "http.server"], cwd=config["output_dir"])
     last = 0
     while True:
-        latest = tuple([os.path.getmtime(p) for p in lsr("./content")])
+        watch = (
+            ls("./")
+            + lsr("./scripts")
+            + lsr(config["templates_dir"])
+            + lsr(config["content_dir"])
+        )
+        latest = tuple([os.path.getmtime(p) for p in watch])
         if last != latest:
             subprocess.run([config["server_python_path"], "scripts/build.py"])
         last = latest

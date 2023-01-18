@@ -7,45 +7,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ article.title }}</title>
     <style>
-        img {
-            max-width: 100%;
-        }
-
-        body {
-            width: 80ch;
-        }
+        /* Avoid Formatter {{user_css}}  */
     </style>
 </head>
 
 <body>
-    <table>
-        <tbody>
-            <tr>
-                <td><a href="/">{{ blog_name }}</a></td>
-                <td>/</td>
-                <td><strong>{{ article.title }}</strong></td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="main">
+        <table>
+            <tbody>
+                <tr>
+                    <td><a href="/">{{ blog_name }}</a></td>
+                    <td>/</td>
+                    <td><strong>{{ article.title }}</strong></td>
+                </tr>
+            </tbody>
+        </table>
 
-    <table>
-        <tbody>
-            <tr>
-                <td>Published</td>
-                <td>{{ article.pub_time|datetime_full }}</td>
-            </tr>
-            {% if article.mod_time %}
-            <tr>
-                <td>Modified</td>
-                <td>{{ article.mod_time|datetime_full }}</td>
-            </tr>
-            {% endif %}
-        </tbody>
-    </table>
+        <table>
+            <tbody>
+                <tr>
+                    <td>Published</td>
+                    <td>{{ article.pub_time|datetime_full }}</td>
+                </tr>
+                {% if article.mod_time %}
+                <tr>
+                    <td>Modified</td>
+                    <td>{{ article.mod_time|datetime_full }}</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
 
-    <hr>
+        <hr>
 
-    <article>{{ article.html|safe }}</article>
+        <article>{{ article.html|safe }}</article>
+    </div>
 </body>
 
 </html>

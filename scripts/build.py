@@ -95,6 +95,11 @@ def main():
         config["format_datetime_full"]
     )
 
+    user_css = ""
+    if config["css"]:
+        with open(config["css"], "r") as f:
+            user_css = f.read()
+
     about = None
     articles = []
     copyfiles = []
@@ -119,6 +124,7 @@ def main():
         blog_name=config["blog_name"],
         about=about,
         articles=articles,
+        user_css=f"/**/{user_css}/**/",
     ))
 
     write("rss.xml", use_template("rss.xml").render(
@@ -132,7 +138,8 @@ def main():
         print(art)
         write(art.path, article_template.render(
             blog_name=config["blog_name"],
-            article=art
+            article=art,
+            user_css=f"/**/{user_css}/**/",
         ))
 
     for cp in copyfiles:
