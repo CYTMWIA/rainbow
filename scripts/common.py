@@ -1,3 +1,5 @@
+#! venv/bin/python
+
 import datetime
 import json
 import os
@@ -64,6 +66,11 @@ class Config(dict):
             config["format_datetime"],
             config["format_datetime_full"],
         )
+        config.server_python_path = "python"
+        for p in config["server_python_path"]:
+            if os.path.exists(p):
+                config.server_python_path = p
+                break
 
     @staticmethod
     def load(paths=["./config.json", "./config-default.json"]):

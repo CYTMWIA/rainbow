@@ -9,5 +9,5 @@
     "output_dir": "./output",
     "content_dir": "./content",
     "templates_dir": "./templates",
-    "server_python_path": "./venv/Scripts/python.exe"
+    "server_python_path": ["./venv/Scripts/python.exe", "./venv/bin/python"]
 }
