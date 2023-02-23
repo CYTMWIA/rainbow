@@ -1,9 +1,11 @@
 #! venv/bin/python
 
 import datetime
+import json
 import os
 import shutil
 import urllib.parse
+from collections import namedtuple
 
 import jinja2
 import markdown
@@ -16,7 +18,6 @@ class Article:
     pub_time: str
     mod_time: str
     html: str
-    path: str
 
     def __str__(self) -> str:
         d = vars(self).copy()
@@ -28,7 +29,6 @@ def make_article_loader(mathjax_src=None, time_format=None):
     def load(path: str):
         art = Article()
 
-        art.path = path
         with open(path, "r") as f:
             raw = f.read()
 
@@ -63,20 +63,66 @@ def make_template_loader(templates_dir: str, filters={}):
 
 def make_output_functions(output_dir: str):
     def write(path: str, content: any):
-        os.makedirs(output_dir, exist_ok=True)
-        p = os.path.join(output_dir, path)
-        with open(p, "w") as f:
+        path = path[1:] if path[0] in "\\/" else path
+        dst = os.path.join(output_dir, path)
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        with open(dst, "w") as f:
             f.write(content)
 
-    def copy(path: str):
-        os.makedirs(output_dir, exist_ok=True)
-        if os.path.isdir(path):
-            dst = os.path.join(output_dir, os.path.basename(path))
-            shutil.copytree(path, dst, dirs_exist_ok=True)
+    def copy(src: str, dst: str):
+        dst = dst[1:] if dst[0] in "\\/" else dst
+        dst = os.path.join(output_dir, dst)
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        if os.path.isdir(src):
+            shutil.copytree(src, dst, dirs_exist_ok=True)
         else:
-            shutil.copy(path, output_dir)
+            shutil.copy(src, dst)
 
     return write, copy
+
+
+ContentItem = namedtuple("ContentItem", ["type", "path_fs", "path_web"])
+
+
+def default_content_dir_settings():
+    return {"path_web": "/"}
+
+
+def content_item_type(path: str):
+    filename = os.path.basename(path)
+    if filename == "about.md":
+        return "about.md", lambda path, filename: urllib.parse.urljoin(path, filename)[:-2]+"html"
+    if filename.startswith("."):
+        return "hidden", lambda path, filename: urllib.parse.urljoin(path, filename)
+    if filename.endswith(".md"):
+        return "markdown", lambda path, filename: urllib.parse.urljoin(path, filename)+".html"
+    return "other", lambda path, filename: urllib.parse.urljoin(path, filename)
+
+
+def walk_content_dir(content_dir: str, dir_settings: dict) -> list[ContentItem]:
+    dir_settings = dir_settings.copy()
+    filename_list = os.listdir(content_dir)
+    if "_.json" in filename_list:
+        with open(os.path.join(content_dir, "_.json")) as f:
+            dir_settings.update(json.load(f))
+        filename_list.remove("_.json")
+    if dir_settings["path_web"][-1] != "/":
+        dir_settings["path_web"] += "/"
+    res: list[ContentItem] = []
+    for name in filename_list:
+        path_fs = os.path.join(content_dir, name)
+        if os.path.isdir(path_fs):
+            ds = dir_settings.copy()
+            ds["path_web"] = urllib.parse.urljoin(ds["path_web"], name)
+            print(path_fs, ds["path_web"])
+            res += walk_content_dir(path_fs, ds)
+        else:
+            type_, make_web_path = content_item_type(path_fs)
+            res.append(ContentItem(
+                type_,
+                path_fs,
+                make_web_path(dir_settings["path_web"], name)))
+    return res
 
 
 def main():
@@ -101,48 +147,44 @@ def main():
 
     about = None
     articles = []
-    copyfiles = []
-    for cp in ls(config["content_dir"]):
-        filename = os.path.basename(cp)
-        if filename == "about.md":
-            about = load_article(cp)
-        elif filename.startswith("."):
-            pass
-        elif filename.endswith(".md"):
-            articles.append(load_article(cp))
+    for item in walk_content_dir(config["content_dir"], default_content_dir_settings()):
+        if item.type == "about.md":
+            about = load_article(item.path_fs)
+            continue
+        elif item.type == "hidden":
+            continue
+        elif item.type == "markdown":
+            art = load_article(item.path_fs)
+            articles.append(art)
+            print("writing", item.path_web)
+            write(item.path_web, use_template("article.html").render(
+                blog_name=config["blog_name"],
+                article=art,
+                user_css=f"/**/{user_css}/**/",
+            ))
         else:
-            copyfiles.append(cp)
+            src = item.path_fs
+            dst = os.path.join(config["output_dir"], item.path_web)
+            print("copying", item.path_fs, dst)
+            copy(src, dst)
 
     articles.sort(key=lambda a: a.pub_time, reverse=True)
-    for art in articles:
-        # path is not *file system path* anymore, it's path in *url* now.
-        art.path = os.path.basename(art.path)+".html"
 
-    write("index.html", use_template("index.html").render(
-        blog_name=config["blog_name"],
-        about=about,
-        articles=articles,
-        user_css=f"/**/{user_css}/**/",
-    ))
+    if about:
+        print("building 'index.html'")
+        write("index.html", use_template("index.html").render(
+            blog_name=config["blog_name"],
+            about=about,
+            articles=articles,
+            user_css=f"/**/{user_css}/**/",
+        ))
 
+    print("building 'rss.xml'")
     write("rss.xml", use_template("rss.xml").render(
         blog_name=config["blog_name"],
         blog_url=config["blog_url"].rstrip("/"),
         articles=articles,
     ))
-
-    article_template = use_template("article.html")
-    for art in articles:
-        print(art)
-        write(art.path, article_template.render(
-            blog_name=config["blog_name"],
-            article=art,
-            user_css=f"/**/{user_css}/**/",
-        ))
-
-    for cp in copyfiles:
-        print("COPY", cp)
-        copy(cp)
 
 
 if __name__ == "__main__":
