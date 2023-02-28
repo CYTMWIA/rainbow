@@ -18,6 +18,7 @@ class Article:
     pub_time: str
     mod_time: str
     html: str
+    path: str  # web path
 
     def __str__(self) -> str:
         d = vars(self).copy()
@@ -155,6 +156,7 @@ def main():
             continue
         elif item.type == "markdown":
             art = load_article(item.path_fs)
+            art.path = item.path_web
             articles.append(art)
             print("writing", item.path_web)
             write(item.path_web, use_template("article.html").render(
