@@ -1,39 +1,36 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ blog_name }}</title>
-    <style>
-        /* Avoid Formatter {{user_css}}  */
-    </style>
+    <style>{{- user_css|replace("\n", "") -}}</style>
 </head>
-
 <body>
     <div class="main">
         <h1>{{ blog_name }}</h1>
 
-        {% if about %}
+        {% if about -%}
         <h2>About</h2>
-        <article> {{ about.html|safe }} </article>
-        {% endif %}
+        <article>
+{{ about.html|safe }}
+        </article>
+        {%- endif %}
 
-        {% if articles %}
+        {% if articles -%}
         <h2>Articles</h2>
         <table>
             <tbody>
-                {% for article in articles %}
+                {% for article in articles -%}
                 <tr>
                     <td>{{ article.pub_time|datetime }}</td>
-                    <td><a href="{{ article.path }}">{{ article.title }}</a></td>
+                    <td><a href="{{ article.path[1:] }}">{{ article.title }}</a></td>
                 </tr>
-                {% endfor %}
+                {%- endfor %}
             </tbody>
         </table>
-        {% endif %}
+        {%- endif %}
     </div>
 </body>
-
 </html>

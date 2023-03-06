@@ -162,7 +162,7 @@ def main():
             write(item.path_web, use_template("article.html").render(
                 blog_name=config["blog_name"],
                 article=art,
-                user_css=f"/**/{user_css}/**/",
+                user_css=user_css,
             ))
         else:
             src = item.path_fs
@@ -178,7 +178,7 @@ def main():
             blog_name=config["blog_name"],
             about=about,
             articles=articles,
-            user_css=f"/**/{user_css}/**/",
+            user_css=user_css,
         ))
 
     print("building 'rss.xml'")

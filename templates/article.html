@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ article.title }}</title>
-    <style>
-        /* Avoid Formatter {{user_css}}  */
-    </style>
+    <style>{{- user_css|replace("\n", "") -}}</style>
 </head>
-
 <body>
     <div class="main">
         <table>
@@ -29,19 +25,20 @@
                     <td>Published</td>
                     <td>{{ article.pub_time|datetime_full }}</td>
                 </tr>
-                {% if article.mod_time %}
+                {% if article.mod_time -%}
                 <tr>
                     <td>Modified</td>
                     <td>{{ article.mod_time|datetime_full }}</td>
                 </tr>
-                {% endif %}
+                {%- endif %}
             </tbody>
         </table>
 
         <hr>
 
-        <article>{{ article.html|safe }}</article>
+        <article>
+{{ article.html|safe }}
+        </article>
     </div>
 </body>
-
 </html>
