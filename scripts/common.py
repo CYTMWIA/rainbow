@@ -94,7 +94,7 @@ def load_config(paths=["./config.json", "./config-default.json"]):
 
 
 def make_time_formatter(format: str, timezone: datetime.timezone):
-    def func(unix_timestamp: float | int | None):
+    def func(unix_timestamp: float):
         if unix_timestamp == None:
             return ""
         dt = datetime.datetime.fromtimestamp(unix_timestamp, timezone)
