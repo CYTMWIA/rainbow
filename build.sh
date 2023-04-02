@@ -28,7 +28,7 @@ cd ..
 
 rm -rf dist
 mkdir -p dist
-cp -t dist build/**.js build/**.wasm
+cp -t dist build/**.js build/**.wasm 2>/dev/null
 
-echo ---
+echo --- Artifact ---
 ls --color=auto -hl dist/*
