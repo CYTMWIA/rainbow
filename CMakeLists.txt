@@ -21,6 +21,9 @@ target_link_libraries(frontend PRIVATE
     # cmark-gfm
     /install/lib/libcmark-gfm.a
     /install/lib/libcmark-gfm-extensions.a
+    # openssl
+    /install/lib/libcrypto.a
+    /install/lib/libssl.a
 )
 
 target_link_options(frontend PRIVATE

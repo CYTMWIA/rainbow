@@ -22,5 +22,16 @@ RUN wget https://github.com/nlohmann/json/archive/refs/tags/v3.11.2.tar.gz -O js
     && emcmake cmake -DCMAKE_INSTALL_PREFIX=/install -DJSON_BuildTests=OFF .. \
     && make install -j$(nproc)
 
+# https://github.com/openssl/openssl/issues/5443
+# https://github.com/TrueBitFoundation/wasm-ports/blob/master/openssl.sh
+WORKDIR /tmp
+RUN wget https://github.com/openssl/openssl/archive/refs/tags/openssl-3.1.0.tar.gz -O openssl.tar.gz \
+    && tar -x -z -f openssl.tar.gz && cd openssl-openssl-3.1.0 \
+    && emconfigure ./Configure linux-generic64 --prefix=/install \
+    && sed -i 's|^CROSS_COMPILE.*$|CROSS_COMPILE=|g' Makefile \
+    && emmake make -j 12 build_generated libssl.a libcrypto.a \
+    && cp -R include/openssl /install/include \
+    && cp libcrypto.a libssl.a /install/lib
+
 WORKDIR /ws
 CMD bash
