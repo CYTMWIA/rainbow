@@ -1,34 +1,19 @@
 #! /usr/bin/bash
+set -e
 
-source ./third_party/emsdk/emsdk_env.sh
+TAG=blog-frontend
 
-ROOT=$(pwd)
-BUILD_DIR=${ROOT}/build
-INSTALL_DIR=${ROOT}/install
-
-mkdir -p $INSTALL_DIR
-
-mkdir -p ${BUILD_DIR}/cmark-gfm && cd ${BUILD_DIR}/cmark-gfm
-emcmake cmake \
-    -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
-    -DCMARK_TESTS=OFF \
-    ${ROOT}/third_party/cmark-gfm \
-    && make -j$(nproc) && make install
-
-mkdir -p ${BUILD_DIR}/nlohmann_json && cd ${BUILD_DIR}/nlohmann_json
-emcmake cmake \
-    -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
-    -DJSON_BuildTests=OFF \
-    ${ROOT}/third_party/nlohmann_json \
-    && make -j$(nproc) && make install
-
-mkdir -p ${BUILD_DIR} && cd ${BUILD_DIR}
-emcmake cmake .. && make
-cd ..
+if which docker; then
+    docker build -t ${TAG} .
+    docker run -v $(pwd):/ws ${TAG} ./build-artifact.sh
+else
+    ./build-artifact.sh
+fi
 
 rm -rf dist
 mkdir -p dist
-cp -t dist build/**.js build/**.wasm 2>/dev/null
+cp -t dist build/**.js
+chmod 0777 dist
 
 echo --- Artifact ---
 ls --color=auto -hl dist/*

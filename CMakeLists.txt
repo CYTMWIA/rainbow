@@ -12,14 +12,15 @@ add_executable(frontend
 )
 
 target_include_directories(frontend PRIVATE
-    ${CMAKE_SOURCE_DIR}/install/include
+    /install/include
 )
+
 target_link_libraries(frontend PRIVATE
     # Emscripten
     embind
     # cmark-gfm
-    ${CMAKE_SOURCE_DIR}/install/lib/libcmark-gfm.a
-    ${CMAKE_SOURCE_DIR}/install/lib/libcmark-gfm-extensions.a
+    /install/lib/libcmark-gfm.a
+    /install/lib/libcmark-gfm-extensions.a
 )
 
 target_link_options(frontend PRIVATE

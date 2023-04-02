@@ -1,9 +1,0 @@
-[submodule "emsdk"]
-	path = third_party/emsdk
-	url = https://github.com/emscripten-core/emsdk.git
-[submodule "third_party/json"]
-	path = third_party/nlohmann_json
-	url = https://github.com/nlohmann/json.git
-[submodule "third_party/cmark-gfm"]
-	path = third_party/cmark-gfm
-	url = https://github.com/github/cmark-gfm.git
