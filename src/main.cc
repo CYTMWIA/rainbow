@@ -60,64 +60,58 @@ std::string decrypt_string(const std::string &ciphertext_b64,
                            const std::string &algorithm = "AES-256-CBC") {
   // Ref:
   // https://wiki.openssl.org/index.php/EVP_Symmetric_Encryption_and_Decryption
-  std::vector<uint8_t> ciphertext(ciphertext_b64.size());
-  std::vector<uint8_t> plaintext(ciphertext_b64.size());
-  int ciphertext_len = 0, plaintext_len = 0, len, ok = 9527;
-  int key_len, iv_len;
+  std::vector<uint8_t> ciphertext(ciphertext_b64.size() / 4 * 3);
+  std::string plaintext(ciphertext_b64.size() / 4 * 3 + 1, 0);
+  int ciphertext_len = 0, plaintext_len = 0, key_len, iv_len, ok = 9527;
   unsigned char *key_ptr, *iv_ptr;
   EVP_CIPHER_CTX *ctx;
   EVP_CIPHER *cipher;
 
-  len = EVP_DecodeBlock(
+  if (!(ctx = EVP_CIPHER_CTX_new())) goto err_New;
+  if (!(cipher = EVP_CIPHER_fetch(NULL, algorithm.c_str(), NULL))) goto err_New;
+
+  // DecodeBlock: The output will be padded with 0 bits if necessary to ensure
+  // that the output is always 3 bytes for every 4 input bytes.
+  ciphertext_len = EVP_DecodeBlock(
       ciphertext.data(),
       reinterpret_cast<const unsigned char *>(ciphertext_b64.data()),
       ciphertext_b64.size());
-  if (len <= 0) goto err_DecodeBlock;
-  ciphertext_len = len;
-
-  if (!(ctx = EVP_CIPHER_CTX_new())) goto err_New;
-  if (!(cipher = EVP_CIPHER_fetch(NULL, algorithm.c_str(), NULL))) goto err_New;
+  if (ciphertext_len <= 0) goto err_DecodeBlock;
+  // Ignore tailing zero added by DecodeBlock (Original data already padded).
+  ciphertext_len = ciphertext_len & ~(EVP_CIPHER_get_block_size(cipher) - 1);
 
   key_len = EVP_CIPHER_get_key_length(cipher);
   iv_len = EVP_CIPHER_get_iv_length(cipher);
   key_ptr = new unsigned char[key_len];
-  iv_ptr = new unsigned char[iv_len+1];
+  iv_ptr = new unsigned char[iv_len + 1];
   for (size_t i = 0; i < key_len; i++) {
-    if (i < key.size())
-      key_ptr[i] = key[i];
-    else
-      key_ptr[i] = 0;
+    key_ptr[i] = (i < key.size()) ? key[i] : 0;
   }
   for (size_t i = 0; i < iv_len; i++) {
-    if (i < iv.size())
-      iv_ptr[i] = iv[i];
-    else
-      iv_ptr[i] = 0;
+    iv_ptr[i] = (i < iv.size()) ? iv[i] : 0;
   }
 
   ok = EVP_DecryptInit_ex2(ctx, cipher, key_ptr, iv_ptr, NULL);
   if (1 != ok) goto err_EVP_DecryptInit_ex2;
 
-  ok = EVP_DecryptUpdate(ctx, plaintext.data(), &len, ciphertext.data(),
-                         ciphertext_len);
+  ok = EVP_DecryptUpdate(ctx, reinterpret_cast<unsigned char *>(&plaintext[0]),
+                         &plaintext_len, ciphertext.data(), ciphertext_len);
   if (1 != ok) goto err_EVP_DecryptUpdate;
-  plaintext_len = len;
 
-  if (ciphertext_len % EVP_CIPHER_get_block_size(cipher)) {
-    ok = EVP_DecryptFinal_ex(ctx, plaintext.data() + plaintext_len, &len);
-    if (1 != ok) goto err_EVP_DecryptFinal_ex;
-    plaintext_len += len;
-  }
+  ok = EVP_DecryptFinal_ex(
+      ctx, reinterpret_cast<unsigned char *>(&plaintext[0]) + plaintext_len,
+      &plaintext_len);
+  if (1 != ok) goto err_EVP_DecryptFinal_ex;
 
   delete[] key_ptr;
   delete[] iv_ptr;
   EVP_CIPHER_free(cipher);
   EVP_CIPHER_CTX_free(ctx);
-  EM_ASM({ console.log($0); }, ciphertext_len);
-  return std::string(reinterpret_cast<char *>(plaintext.data()), plaintext_len);
+
+  return plaintext;
 
 err_DecodeBlock:
-  EM_ASM({ console.log("EVP_DecodeBlock() failed with", $0); }, len);
+  EM_ASM({ console.log("EVP_DecodeBlock() failed with", $0); }, ciphertext_len);
   goto err;
 err_New:
   EM_ASM({ console.log("EVP_CIPHER_CTX_new() or EVP_CIPHER_fetch() failed"); });
@@ -184,7 +178,7 @@ extern "C" int frontend_entry(char *ptr_json_str) {
     exit(-1);
   }
   emscripten_console_log(
-      decrypt_string("t3K3YMr13j/kw5DBfHw3Vw==", "1", "1").c_str());
+      decrypt_string("AQOl9ZOnWyQhLLx7aOfWjA==", "1", "1").c_str());
   return 0;
 }
 
