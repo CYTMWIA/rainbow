@@ -7,15 +7,9 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "")
     set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-add_executable(frontend
-    src/main.cc
-)
+include_directories(/install/include)
 
-target_include_directories(frontend PRIVATE
-    /install/include
-)
-
-target_link_libraries(frontend PRIVATE
+link_libraries(
     # Emscripten
     embind
     # cmark-gfm
@@ -26,11 +20,5 @@ target_link_libraries(frontend PRIVATE
     /install/lib/libssl.a
 )
 
-target_link_options(frontend PRIVATE
-    -sEXPORTED_RUNTIME_METHODS=ccall,cwrap
-    -sEXPORTED_FUNCTIONS=_main,_frontend_entry
-    -sSINGLE_FILE
-    --pre-js ${CMAKE_SOURCE_DIR}/js/pre.js
-    --post-js ${CMAKE_SOURCE_DIR}/js/post.js
-    # --emrun
-)
+add_subdirectory(src/markdown)
+add_subdirectory(src/pages/index)
