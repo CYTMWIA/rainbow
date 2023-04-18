@@ -1,3 +1,18 @@
 {
-    "about": "# H1"
+    "about": "# H1\nHello World.",
+    "articles": [
+        {
+            "title": "Title 1",
+            "manifest": "",
+            "pud_time": 100
+        },
+        {
+            "title": "Title 2",
+            "pud_time": 10
+        },
+        {
+            "title": "Title 3",
+            "pud_time": 0
+        }
+    ]
 }

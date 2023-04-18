@@ -17,7 +17,12 @@ function main() {
     console.log("main() in JS started.")
 
     document.getElementById("about").innerHTML = render_markdown(index_json.about);
-    document.getElementById("articles").innerHTML = "";
+
+    let elem_articles = document.getElementById("articles");
+    elem_articles.innerHTML = "";
+    index_json.articles.forEach((art) => {
+        elem_articles.innerHTML += `<div><a href="article.html?${art.manifest}">${art.title}</a><small>${(new Date(art.pud_time*1000)).toLocaleString()}</small></div>`
+    });
 }
 
 Module['onRuntimeInitialized'] = function () {

@@ -6,6 +6,7 @@ RUN apt update \
     && apt install -y \
         cmake \
         gcc-multilib \
+        libeigen3-dev \
     && apt clean
 
 WORKDIR /tmp
