@@ -75,10 +75,10 @@ bool init_shader() {
 }
 
 const char *CANVAS_ELEM = "#background";
-int CANVAS_WIDTH, CANVAS_HEIGHT;
+float CANVAS_WIDTH, CANVAS_HEIGHT;
 bool fit_canvas_size() {
-  CANVAS_HEIGHT = emscripten::val::global("window")["innerHeight"].as<int>();
-  CANVAS_WIDTH = emscripten::val::global("window")["innerWidth"].as<int>();
+  CANVAS_HEIGHT = emscripten::val::global("window")["innerHeight"].as<float>();
+  CANVAS_WIDTH = emscripten::val::global("window")["innerWidth"].as<float>();
   auto res = emscripten_set_canvas_element_size(CANVAS_ELEM, CANVAS_WIDTH,
                                                 CANVAS_HEIGHT);
   if (res != EMSCRIPTEN_RESULT_SUCCESS) return false;
