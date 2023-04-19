@@ -16,6 +16,8 @@ function main() {
     if (!first_run()) return;
     console.log("main() in JS started.")
 
+    document.title = index_json.title;
+
     document.getElementById("about").innerHTML = render_markdown(index_json.about);
 
     let elem_articles = document.getElementById("articles");
@@ -31,7 +33,7 @@ Module['onRuntimeInitialized'] = function () {
     main();
 };
 
-fetch("index.json").then((resp) => {
+fetch("manifests/index.json").then((resp) => {
     return resp.json();
 }, (reason) => {
     alert("获取 index.json 失败");
