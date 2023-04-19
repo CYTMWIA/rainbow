@@ -22,3 +22,4 @@ link_libraries(
 
 add_subdirectory(src/markdown)
 add_subdirectory(src/pages/index)
+add_subdirectory(src/pages/article)
