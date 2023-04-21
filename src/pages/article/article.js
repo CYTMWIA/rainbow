@@ -113,4 +113,12 @@
         let article_elem = document.getElementById("article");
         article_elem.innerHTML = render_markdown(manifest_json.content);
     }
+
+    fetch("https://unpkg.com/mathjax@3.2.0/es5/tex-svg-full.js")
+        .then((resp) => resp.text())
+        .then((text) => eval(text))
+        .catch((reason) => {
+            alert("Import mathjax failed.");
+            console.error(reason);
+        });
 })();
