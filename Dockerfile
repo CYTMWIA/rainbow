@@ -9,6 +9,16 @@ RUN apt update \
         libeigen3-dev \
     && apt clean
 
+# https://stackoverflow.com/questions/44683119/dockerfile-replicate-the-host-user-uid-and-gid-to-the-image
+ARG UNAME=user
+ARG UID=1000
+ARG GID=1000
+RUN groupadd -g $GID -o $UNAME \
+    && useradd -m -u $UID -g $GID -o -s /bin/bash $UNAME \
+    && mkdir /install /ws \
+    && chown $UNAME /install /ws
+USER $UNAME
+
 WORKDIR /tmp
 RUN wget https://github.com/github/cmark-gfm/archive/refs/tags/0.29.0.gfm.10.tar.gz -O cmark.tar.gz \
     && tar -x -z -f cmark.tar.gz && cd cmark-gfm-0.29.0.gfm.10 \
