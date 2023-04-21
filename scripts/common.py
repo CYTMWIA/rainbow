@@ -1,11 +1,10 @@
 #! venv/bin/python
 
-import datetime
 import json
 import os
-from functools import partial
 
-open = partial(open, encoding="utf-8")
+DIST_DIR = "./dist"
+CONTENT_DIR = "./content"
 
 
 def ls(path: str):
@@ -22,58 +21,12 @@ def lsr(path: str):
     return paths
 
 
-def parse_timezone(s: str):
-    signed = 1
-    if s[0] == '-':
-        signed = -1
-        s = s[1:]
-    elif s[0] == "+":
-        s = s[1:]
-    hours = signed * int(s[:2])
-    mins = signed * int(s[-2:])
-    return datetime.timezone(datetime.timedelta(hours=hours, minutes=mins))
-
-
-class Formatter:
-    def __init__(self, tz: datetime.timezone = None, format_datetime: str = None, format_datetime_full: str = None) -> None:
-        assert (tz != None)
-        assert (format_datetime != None)
-        assert (format_datetime_full != None)
-
-        self.datetime = make_time_formatter(
-            format_datetime, tz
-        )
-        self.datetime_full = make_time_formatter(
-            format_datetime_full, tz
-        )
-        self.datetime_rfc2822 = make_time_formatter(
-            "%a, %d %b %Y %H:%M:%S %z", tz
-        )
-
-
 class Config(dict):
-    timezone: datetime.timezone
-    formatter: Formatter
-
     def __init__(self, raw_dict: dict):
         super().__init__(raw_dict)
 
     @staticmethod
-    def __specialize_config(config):
-        config.timezone = parse_timezone(config["timezone"])
-        config.formatter = Formatter(
-            config.timezone,
-            config["format_datetime"],
-            config["format_datetime_full"],
-        )
-        config.server_python_path = "python"
-        for p in config["server_python_path"]:
-            if os.path.exists(p):
-                config.server_python_path = p
-                break
-
-    @staticmethod
-    def load(paths=["./config.json", "./config-default.json"]):
+    def load(paths):
         cfgs = []
         for p in paths:
             if not os.path.exists(p):
@@ -85,21 +38,11 @@ class Config(dict):
             for key in cfg:
                 final[key] = cfg[key]
         final = Config(final)
-        Config.__specialize_config(final)
         return final
 
 
 def load_config(paths=["./config.json", "./config-default.json"]):
     return Config.load(paths)
-
-
-def make_time_formatter(format: str, timezone: datetime.timezone):
-    def func(unix_timestamp: float):
-        if unix_timestamp == None:
-            return ""
-        dt = datetime.datetime.fromtimestamp(unix_timestamp, timezone)
-        return dt.strftime(format)
-    return func
 
 
 def split_front_matter(raw_text: str):
@@ -129,5 +72,3 @@ def split_front_matter(raw_text: str):
 if __name__ == "__main__":
     # Test
     config = load_config()
-    print(config.format_datetime)
-    print(config["format_datetime"])

@@ -1,26 +1,24 @@
 #! venv/bin/python
-
-import itertools
 import json
 import os
 import time
 
-from common import load_config, open
+import common
 
 
 def main():
-    config = load_config()
     date = time.strftime("%Y%m%d")
-    for idx in itertools.count(start=1):
-        filename = f"{date}-{idx}.md"
-        path = os.path.join(config["content_dir"], filename)
-        if not os.path.exists(path):
-            break
-    with open(path, "w") as f:
+
+    folder = os.path.join(common.CONTENT_DIR, "articles", f"{date}")
+    os.makedirs(folder, exist_ok=True)
+
+    path = os.path.join(folder, "content.md")
+    with open(path, "a", encoding="utf-8") as f:
+        t = time.time()
         f.write(json.dumps({
-            "title": filename,
-            "pub_time": config.formatter.datetime_full(time.time()),
-            "mod_time": None
+            "title": "Title",
+            "pub_time": t,
+            "mod_time": t
         }, indent=4))
     print("CREATE", path)
 

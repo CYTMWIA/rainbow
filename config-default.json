@@ -1,13 +1,4 @@
 {
     "blog_name": "Simple Blog",
-    "blog_url": "https://cytmwia.github.io/simple-blog/",
-    "css": "simple-style.css",
-    "timezone": "+0800",
-    "format_datetime": "%y/%m/%d %H:%M",
-    "format_datetime_full": "%Y/%m/%d %H:%M:%S %z",
-    "mathjax_src": "https://unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js",
-    "output_dir": "./output",
-    "content_dir": "./content",
-    "templates_dir": "./templates",
-    "server_python_path": ["./venv/Scripts/python.exe", "./venv/bin/python"]
+    "blog_url": "https://cytmwia.github.io/simple-blog/"
 }
