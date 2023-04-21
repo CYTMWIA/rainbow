@@ -114,7 +114,7 @@
         article_elem.innerHTML = render_markdown(manifest_json.content);
     }
 
-    fetch("https://unpkg.com/mathjax@3.2.0/es5/tex-svg-full.js")
+    fetch("https://unpkg.com/mathjax@3.2.0/es5/tex-svg-full.js", { cache: "force-cache" })
         .then((resp) => resp.text())
         .then((text) => eval(text))
         .catch((reason) => {
