@@ -23,7 +23,7 @@ function main() {
     let elem_articles = document.getElementById("articles");
     elem_articles.innerHTML = "";
     index_json.articles.forEach((art) => {
-        elem_articles.innerHTML += `<div><a href="article.html?${art.manifest}">${art.title}</a><small>${(new Date(art.pud_time*1000)).toLocaleString()}</small></div>`
+        elem_articles.innerHTML += `<div><a href="article.html?${art.manifest}">${art.title}</a><small>${(new Date(art.pub_time*1000)).toLocaleString()}</small></div>`
     });
 }
 
