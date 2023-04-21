@@ -33,7 +33,7 @@
             margin-right: auto;
             /* margin-bottom: 1ch; */
             background-color: #FFFFFF;
-            border-radius: 6px;
+            /* border-radius: 6px; */
             padding: 1ch;
             /* display: none; */
         }
@@ -48,22 +48,84 @@
             margin-right: auto;
         }
 
-        img {
-            max-width: 100%;
-            border-radius: 6px;
+        /******************************/
+        /* Common */
+        /******************************/
+
+        article p {
+            line-height: 1.6;
         }
 
-        pre,
-        code {
+        article img {
+            max-width: 100%;
+            /* border-radius: 6px; */
+        }
+
+        /******************************/
+        /* Link */
+        /******************************/
+
+        article a:visited {
+            color: gray;
+        }
+
+        article a:link {
+            color: black;
+        }
+
+        /******************************/
+        /* Code */
+        /******************************/
+
+        article pre,
+        article code {
             background-color: lightgray;
             padding: .1em .4em;
-            border-radius: 6px;
+            /* border-radius: 6px; */
             font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
         }
 
-        pre>code {
+        article pre>code {
             padding: 0;
             background-color: unset;
+        }
+
+        /******************************/
+        /* Quote */
+        /******************************/
+
+        article blockquote {
+            border-left: solid;
+            border-left-width: thick;
+            border-left-color: darkgray;
+            background: whitesmoke;
+            padding-left: 1ch;
+        }
+
+        /******************************/
+        /* Table */
+        /******************************/
+
+        article table {
+            margin-left: auto;
+            margin-right: auto;
+            min-width: 50%;
+            border-collapse: collapse;
+        }
+
+        article table>* {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        article th,
+        article td {
+            border: solid 1px darkgray;
+
+        }
+
+        article table tbody tr:nth-child(2n-1) {
+            background-color: whitesmoke;
         }
     </style>
 </body>
