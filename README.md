@@ -1,5 +1,6 @@
-# simple-blog
+# CYTMWIA's Blog System
 
-txt-style static blog site generator  
+## TODO
 
-[Demo](https://cytmwia.github.io/simple-blog/)  
+- Markdown parser
+- Mathjax Integration
