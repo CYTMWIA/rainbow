@@ -1,0 +1,20 @@
+{
+    "title": "某人的博客",
+    "about": "# H1\nHello World.\n\n你好，世界。",
+    "articles": [
+        {
+            "title": "Title 1",
+            "manifest": "a1.json",
+            "pud_time": 100
+        },
+        {
+            "title": "Title 2",
+            "manifest": "a2.json",
+            "pud_time": 10
+        },
+        {
+            "title": "Title 3",
+            "pud_time": 0
+        }
+    ]
+}

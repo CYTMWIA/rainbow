@@ -1,6 +1,13 @@
 venv
-output
-dist
+**\__pycache__
+
+install/
+build-*/
+build/
+
+dist/
+output/
+
+.vscode/
 config.json
 
-**\__pycache__
