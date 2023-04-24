@@ -1,4 +1,6 @@
 {
-    "blog_name": "Simple Blog",
-    "blog_url": "https://cytmwia.github.io/simple-blog/"
+    "blog_name": "Rainbow",
+    "blog_url": "https://cytmwia.github.io/rainbow/",
+    "content_dir": "content",
+    "dist_dir": "dist"
 }

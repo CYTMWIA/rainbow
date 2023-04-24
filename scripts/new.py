@@ -7,9 +7,11 @@ import common
 
 
 def main():
+    config = common.load_config()
+
     date = time.strftime("%Y%m%d")
 
-    folder = os.path.join(common.CONTENT_DIR, "articles", f"{date}")
+    folder = os.path.join(config["content_dir"], "articles", f"{date}")
     os.makedirs(folder, exist_ok=True)
 
     path = os.path.join(folder, "content.md")

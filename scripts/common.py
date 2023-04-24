@@ -3,10 +3,6 @@
 import json
 import os
 
-DIST_DIR = "./dist"
-CONTENT_DIR = "./content"
-
-
 def ls(path: str):
     return [os.path.join(path, p) for p in os.listdir(path)]
 

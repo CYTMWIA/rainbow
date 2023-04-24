@@ -12,11 +12,15 @@ import requests
 
 
 def read(src: str):
+    src = os.path.abspath(src)
+    
     with open(src, "r", encoding="utf-8") as f:
         return f.read()
 
 
 def write(dst: str, content: any):
+    dst = os.path.abspath(dst)
+
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     w = "wb" if isinstance(content, bytes) else "w"
     encoding = "utf-8" if w == "w" else None
@@ -25,6 +29,9 @@ def write(dst: str, content: any):
 
 
 def copy(src: str, dst: str):
+    src = os.path.abspath(src)
+    dst = os.path.abspath(dst)
+    
     print(f"COPY {src} -> {dst}")
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     if os.path.isdir(src):
@@ -35,9 +42,9 @@ def copy(src: str, dst: str):
 
 class Main:
     def __init__(self) -> None:
-        self.dist_dir = common.DIST_DIR
-        self.content_dir = common.CONTENT_DIR
         self.config = load_config()
+        self.dist_dir = self.config["dist_dir"]
+        self.content_dir = self.config["content_dir"]
 
         self.articles()
         self.root()
@@ -100,7 +107,7 @@ class Main:
             print(f"{root_dir} Not Exists.")
             return
         for f in ls(root_dir):
-            copy(f, common.DIST_DIR)
+            copy(f, self.dist_dir)
 
     def download(self, url: str, dst: str):
         resp = requests.get(url)
