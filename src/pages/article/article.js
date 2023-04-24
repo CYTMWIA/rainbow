@@ -64,13 +64,16 @@
         document.title = manifest_json.title;
         let meta_elem = document.getElementById("meta");
         let epoch2str = (ts) => (new Date(ts * 1000)).toLocaleString();
-        meta_elem.innerHTML =
-            `<h1>${manifest_json.title}</h1>`
-            + "<table><tbody>"
-            // + `<tr><td></td><td></td></<tr>`
-            + `<tr><td>Published</td><td><strong>${epoch2str(manifest_json.pub_time)}</strong></td></<tr>`
-            + `<tr><td>Modified</td><td><strong>${epoch2str(manifest_json.mod_time)}</strong></td></<tr>`
-            + "</tbody></table>";
+
+        html = `<h1>${manifest_json.title}</h1>`;
+        html += "<table><tbody>";
+        if (manifest_json.pub_time)
+            html += `<tr><td>Published</td><td><strong>${epoch2str(manifest_json.pub_time)}</strong></td></<tr>`;
+        if (manifest_json.mod_time)
+            html += `<tr><td>Modified</td><td><strong>${epoch2str(manifest_json.mod_time)}</strong></td></<tr>`;
+        html += "</tbody></table>";
+
+        meta_elem.innerHTML = html;
 
         on_all_ready();
     }

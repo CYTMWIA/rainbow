@@ -3,6 +3,8 @@
 import json
 import os
 import shutil
+import time
+import datetime
 
 import common
 from common import load_config, ls, split_front_matter
@@ -75,12 +77,21 @@ class Main:
             raw_article = read(md_file)
             article, content = split_front_matter(raw_article)
             article["manifest"] = os.path.basename(adir)+".json"
+
+            article["mod_time"] = article.get("mod_time", None)
+
+            if isinstance(article["pub_time"], str):
+                article["pub_time"] = time.mktime(time.strptime(article["pub_time"], "%Y/%m/%d %H:%M:%S %z"))
+            if isinstance(article["mod_time"], str):
+                article["mod_time"] = time.mktime(time.strptime(article["mod_time"], "%Y/%m/%d %H:%M:%S %z"))
+
             index["articles"].append(article)
 
             article["content"] = content
             manifest = os.path.join(manifests_dir, article["manifest"])
             write(manifest, json.dumps(article))
 
+        index["articles"].sort(key=lambda a: a["pub_time"], reverse=True)
         write(os.path.join(manifests_dir, "index.json"), json.dumps(index))
 
     def root(self):
