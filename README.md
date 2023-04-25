@@ -5,10 +5,10 @@
 ## Usage
 
 ```bash
-# build WASM
-./build.sh
-# build content
-./scripts/build.py
+# build all
+./scripts/build.sh
+# build wasm part only
+./scripts/build-core.sh
 ```
 
 ## TODO
