@@ -12,8 +12,5 @@ else
     ./build-artifact.sh
 fi
 
-# mkdir -p dist/manifests
-# cp manifests-test/* dist/manifests/
-
 echo --- Artifact ---
 ls --color=auto -hl dist/*
