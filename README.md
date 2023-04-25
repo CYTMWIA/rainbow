@@ -1,7 +1,18 @@
 # Rainbow
 
-## CYTMWIA's Blog System
+[CYTMWIA's Blog](https://cytmwia.github.io/)  
+
+## Usage
+
+```bash
+# build WASM
+./build.sh
+# build content
+./scripts/build.py
+```
 
 ## TODO
 
-NONE  
+- Desktop-like UI
+- More background animations
+- Multi-passwords article
