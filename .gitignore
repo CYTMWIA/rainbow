@@ -8,6 +8,6 @@ build/
 dist/
 output/
 
+.devcontainer/
 .vscode/
 config.json
-
