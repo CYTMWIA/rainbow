@@ -1,19 +1,45 @@
 #! venv/bin/python
 
+import base64
+import datetime
 import json
+import math
 import os
 import shutil
 import time
-import datetime
 
 import common
-from common import load_config, ls, split_front_matter
 import requests
+from common import load_config, ls, split_front_matter
+from cryptography.hazmat.primitives import padding
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+
+
+def get_cipher(password: str):
+    key_len = algorithms.AES256.key_size//8
+    iv_len = algorithms.AES256.block_size//8
+    total = key_len+iv_len
+    password = password.encode("utf-8")
+    password = (password*(int(total/len(password))+1))[:total]
+    key = password[:key_len]
+    iv = password[key_len:]
+    return Cipher(algorithms.AES256(key), modes.CBC(iv))
+
+
+def encrypt_string(s: str, password: str):
+    cipher = get_cipher(password)
+    encryptor = cipher.encryptor()
+    padder = padding.PKCS7(cipher.algorithm.block_size).padder()
+
+    data = s.encode("utf-8")
+    data = padder.update(data) + padder.finalize()
+    data = encryptor.update(data) + encryptor.finalize()
+    return data
 
 
 def read(src: str):
     src = os.path.abspath(src)
-    
+
     with open(src, "r", encoding="utf-8") as f:
         return f.read()
 
@@ -31,7 +57,7 @@ def write(dst: str, content: any):
 def copy(src: str, dst: str):
     src = os.path.abspath(src)
     dst = os.path.abspath(dst)
-    
+
     print(f"COPY {src} -> {dst}")
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     if os.path.isdir(src):
@@ -83,20 +109,31 @@ class Main:
 
             raw_article = read(md_file)
             article, content = split_front_matter(raw_article)
-            article["manifest"] = os.path.basename(adir)+".json"
-
-            article["mod_time"] = article.get("mod_time", None)
+            article["content"] = content
+            article["manifest"] = manifest = os.path.basename(adir)+".json"
 
             for k in ["pub_time", "mod_time"]:
+                article[k] = article.get(k, None)
                 if not isinstance(article[k], str):
                     continue
                 t = time.strptime(article[k], self.config["datetime_format"])
                 article[k] = time.mktime(t)
 
-            index["articles"].append(article)
+            password = article.get("password", None)
+            if password:
+                data = encrypt_string(json.dumps(article), password)
+                article = {
+                    "data": base64.b64encode(data).decode(),
+                    "encrypted": True
+                }
+            else:
+                index["articles"].append({
+                    "title": article["title"],
+                    "pub_time": article["pub_time"],
+                    "manifest": manifest
+                })
 
-            article["content"] = content
-            manifest = os.path.join(manifests_dir, article["manifest"])
+            manifest = os.path.join(manifests_dir, manifest)
             write(manifest, json.dumps(article))
 
         index["articles"].sort(key=lambda a: a["pub_time"], reverse=True)

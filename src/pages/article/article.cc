@@ -8,7 +8,7 @@
 #include <string>
 
 extern "C" char *decrypt_string(const char *input_ciphertext_b64,
-                                const char *input_key, const char *input_iv,
+                                const char *input_password,
                                 const char *algorithm) {
   // Ref:
   // https://wiki.openssl.org/index.php/EVP_Symmetric_Encryption_and_Decryption
@@ -17,8 +17,7 @@ extern "C" char *decrypt_string(const char *input_ciphertext_b64,
       reinterpret_cast<const unsigned char *>(input_ciphertext_b64);
 
   int ciphertext_b64_len = strlen(input_ciphertext_b64);
-  int input_key_len = strlen(input_key);
-  int input_iv_len = strlen(input_iv);
+  int input_password_len = strlen(input_password);
 
   // Additional 0x10 bytes was added in case of something I don't know.
   unsigned char *ciphertext =
@@ -60,11 +59,12 @@ extern "C" char *decrypt_string(const char *input_ciphertext_b64,
   int iv_len = EVP_CIPHER_get_iv_length(cipher);
   unsigned char *key = new unsigned char[key_len];
   unsigned char *iv = new unsigned char[iv_len + 1];
-  for (size_t i = 0; i < key_len; i++) {
-    key[i] = (i < input_key_len) ? input_key[i] : 0;
-  }
-  for (size_t i = 0; i < iv_len; i++) {
-    iv[i] = (i < input_iv_len) ? input_iv[i] : 0;
+  for (size_t i = 0; i < key_len + iv_len; i++) {
+    int p = i % input_password_len;
+    if (i < key_len)
+      key[i] = input_password[p];
+    else
+      iv[i - key_len] = input_password[p];
   }
 
   int rc = EVP_DecryptInit_ex2(ctx, cipher, key, iv, NULL);

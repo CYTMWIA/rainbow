@@ -82,7 +82,7 @@
     Module["onRuntimeInitialized"] = function () {
         let _render_markdown = Module.cwrap("render_markdown_c", "number", ["string"]);
         render_markdown = (s) => UTF8ToString(_render_markdown(s));
-        decrypt_string = Module.cwrap("decrypt_string", "number", ["string", "string", "string", "string"]);
+        decrypt_string = Module.cwrap("decrypt_string", "number", ["string", "string", "string"]);
         on_all_ready();
     };
 
@@ -102,8 +102,7 @@
 
         if (manifest_json.encrypted === true) {
             console.log("Decrypting...");
-            let key = query["password"] ? query["password"] : "";
-            let res = decrypt_string(manifest_json.data, key, "CYTMWIA", "AES-256-CBC");
+            let res = decrypt_string(manifest_json.data, query["password"], "AES-256-CBC");
             if (-1 === res) {
                 alert("Decrypt data failed.");
                 return;
