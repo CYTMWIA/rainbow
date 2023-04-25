@@ -3,8 +3,13 @@
 import json
 import os
 
+
 def ls(path: str):
     return [os.path.join(path, p) for p in os.listdir(path)]
+
+
+def ls_abs(path: str):
+    return [os.path.abspath(p) for p in ls(path)]
 
 
 def lsr(path: str):
@@ -15,6 +20,10 @@ def lsr(path: str):
         else:
             paths.append(next_path)
     return paths
+
+
+def lsr_abs(path: str):
+    return [os.path.abspath(p) for p in lsr(path)]
 
 
 class Config(dict):

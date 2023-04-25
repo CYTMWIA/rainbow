@@ -2,17 +2,23 @@
 
 import base64
 import datetime
+import hashlib
 import json
 import math
 import os
+import re
 import shutil
 import time
 
 import common
 import requests
-from common import load_config, ls, split_front_matter
+from common import load_config, ls, ls_abs, split_front_matter
 from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+
+
+def hash_string(s: str):
+    return hashlib.sha1(s.encode()).digest().hex()
 
 
 def get_cipher(password: str):
@@ -58,23 +64,81 @@ def copy(src: str, dst: str):
     src = os.path.abspath(src)
     dst = os.path.abspath(dst)
 
-    print(f"COPY {src} -> {dst}")
+    # print(f"COPY {src} -> {dst}")
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     if os.path.isdir(src):
-        shutil.copytree(src, dst)
+        return shutil.copytree(src, dst)
     else:
-        shutil.copy(src, dst)
+        return shutil.copy(src, dst)
 
 
 class Main:
     def __init__(self) -> None:
         self.config = load_config()
-        self.dist_dir = self.config["dist_dir"]
-        self.content_dir = self.config["content_dir"]
 
+        self.dist_dir = self.config["dist_dir"]
+        self.manifests_dir = os.path.join(self.dist_dir, "manifests")
+        self.res_dir = os.path.join(self.dist_dir, "res")
+
+        self.content_dir = self.config["content_dir"]
+        self.articles_dir = os.path.join(self.content_dir, "articles")
+
+        self.ensure_dirs_exists()
         self.articles()
         self.root()
         # self.download("https://unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js", "mathjax.js")
+
+    def ensure_dirs_exists(self):
+        for d in [
+            self.dist_dir,
+            self.manifests_dir,
+            self.res_dir
+        ]:
+            os.makedirs(d, exist_ok=True)
+
+    def read_article(self, path: str):
+        raw_article = read(path)
+
+        article, content = split_front_matter(raw_article)
+        article["content"] = content
+
+        fallback = os.path.basename(os.path.dirname(path))+".json"
+        article["manifest"] = article.get("manifest", fallback)
+
+        for k in ["pub_time", "mod_time"]:
+            article[k] = article.get(k, None)
+            if not isinstance(article[k], str):
+                continue
+            t = time.strptime(article[k], self.config["datetime_format"])
+            article[k] = time.mktime(t)
+
+        return article
+
+    def remap_article_images(self, article_dir: str, article: dict, res_files_map: dict):
+        content = article["content"]
+        images = re.findall(r"(!\[.*?\]\((.+?)\))", content)
+        for img, old_name in images:
+            origin = os.path.abspath(os.path.join(article_dir, old_name))
+            if origin not in res_files_map:
+                continue
+
+            new_path = os.path.join("res", res_files_map[origin])
+            new_img = img.replace(old_name, new_path)
+            content = content.replace(img, new_img)
+        article["content"] = content
+
+    def shuffle_res_files(self, res_files: list):
+        res_files_map = {}
+        for origin in res_files:
+            ext = os.path.basename(origin)
+            ext = ext[ext.index("."):]
+            new_name = hash_string(os.path.basename(origin))+ext
+            while os.path.exists(os.path.join(self.res_dir, new_name)):
+                new_name = hash_string(new_name)+ext
+            new_path = os.path.join(self.res_dir, new_name)
+            os.replace(copy(origin, self.res_dir), new_path)
+            res_files_map[origin] = new_name
+        return res_files_map
 
     def articles(self):
         index = {
@@ -82,48 +146,33 @@ class Main:
             "articles": []
         }
 
-        articles_dir = os.path.join(self.content_dir, "articles")
-        manifests_dir = os.path.join(self.dist_dir, "manifests")
-        os.makedirs(manifests_dir, exist_ok=True)
-        # TODO: redirect url in articles
-        # res_dir = os.path.join(self.dist_dir, "res")
-        res_dir = self.dist_dir
-        os.makedirs(res_dir, exist_ok=True)
+        for adir in ls_abs(self.articles_dir):
+            files = ls_abs(adir)
 
-        for adir in ls(articles_dir):
-            files = ls(adir)
             md_files = list(filter(lambda s: s.endswith(".md"), files))
-            res_files = list(filter(lambda s: s not in md_files, files))
-
-            for f in res_files:
-                copy(f, res_dir)
-
             md_file = md_files[0]
             if len(md_files) > 1:
                 print(f"There are more than one .md files in '{adir}'.\n"
                       f"    Only '{os.path.basename(md_file)}' would be used.")
 
+            res_files = list(filter(lambda s: s not in md_files, files))
+            res_files_map = self.shuffle_res_files(res_files)
+
+            article = self.read_article(md_file)
+            self.remap_article_images(adir, article, res_files_map)
+
             if adir.endswith("/index"):
-                index["about"] = read(md_file)
+                index["about"] = article["content"]
                 continue
 
-            raw_article = read(md_file)
-            article, content = split_front_matter(raw_article)
-            article["content"] = content
-            article["manifest"] = manifest = os.path.basename(adir)+".json"
-
-            for k in ["pub_time", "mod_time"]:
-                article[k] = article.get(k, None)
-                if not isinstance(article[k], str):
-                    continue
-                t = time.strptime(article[k], self.config["datetime_format"])
-                article[k] = time.mktime(t)
+            manifest = article["manifest"]
 
             password = article.get("password", None)
             if password:
                 data = encrypt_string(json.dumps(article), password)
+                data = base64.b64encode(data).decode()
                 article = {
-                    "data": base64.b64encode(data).decode(),
+                    "data": data,
                     "encrypted": True
                 }
             else:
@@ -133,11 +182,11 @@ class Main:
                     "manifest": manifest
                 })
 
-            manifest = os.path.join(manifests_dir, manifest)
+            manifest = os.path.join(self.manifests_dir, manifest)
             write(manifest, json.dumps(article))
 
         index["articles"].sort(key=lambda a: a["pub_time"], reverse=True)
-        write(os.path.join(manifests_dir, "index.json"), json.dumps(index))
+        write(os.path.join(self.manifests_dir, "index.json"), json.dumps(index))
 
     def root(self):
         root_dir = os.path.join(self.content_dir, "root")
