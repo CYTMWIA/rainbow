@@ -87,10 +87,11 @@ class Main:
 
             article["mod_time"] = article.get("mod_time", None)
 
-            if isinstance(article["pub_time"], str):
-                article["pub_time"] = time.mktime(time.strptime(article["pub_time"], "%Y/%m/%d %H:%M:%S %z"))
-            if isinstance(article["mod_time"], str):
-                article["mod_time"] = time.mktime(time.strptime(article["mod_time"], "%Y/%m/%d %H:%M:%S %z"))
+            for k in ["pub_time", "mod_time"]:
+                if not isinstance(article[k], str):
+                    continue
+                t = time.strptime(article[k], self.config["datetime_format"])
+                article[k] = time.mktime(t)
 
             index["articles"].append(article)
 

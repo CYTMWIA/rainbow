@@ -2,5 +2,6 @@
     "blog_name": "Rainbow",
     "blog_url": "https://cytmwia.github.io/rainbow/",
     "content_dir": "content",
-    "dist_dir": "dist"
+    "dist_dir": "dist",
+    "datetime_format": "%Y/%m/%d %H:%M:%S %z"
 }
