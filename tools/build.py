@@ -8,6 +8,7 @@ import math
 import os
 import re
 import shutil
+import sys
 import time
 
 import common
@@ -60,21 +61,29 @@ def write(dst: str, content: any):
         f.write(content)
 
 
-def copy(src: str, dst: str):
-    src = os.path.abspath(src)
-    dst = os.path.abspath(dst)
+def copy_dir(src_dir: str, dst_dir: str):
+    src_dir = os.path.abspath(src_dir)
+    dst_dir = os.path.abspath(dst_dir)
+    os.makedirs(dst_dir, exist_ok=True)
+    return shutil.copytree(src_dir, dst_dir, dirs_exist_ok=True)
 
-    # print(f"COPY {src} -> {dst}")
+
+def copy_file(src_file: str, dst_dir_or_file: str):
+    src = os.path.abspath(src_file)
+    dst = os.path.abspath(dst_dir_or_file)
     os.makedirs(os.path.dirname(dst), exist_ok=True)
-    if os.path.isdir(src):
-        return shutil.copytree(src, dst)
-    else:
-        return shutil.copy(src, dst)
+    return shutil.copy(src, dst)
 
 
 class Main:
     def __init__(self) -> None:
-        self.config = load_config()
+        self.self_path = os.path.abspath(sys.argv[0])
+        self.root_dir = os.path.dirname(os.path.dirname(self.self_path))
+
+        self.config = load_config([
+            "./config.json",
+            os.path.join(self.root_dir, "config-default.json"),
+        ])
 
         self.dist_dir = self.config["dist_dir"]
         self.manifests_dir = os.path.join(self.dist_dir, "manifests")
@@ -82,11 +91,15 @@ class Main:
 
         self.content_dir = self.config["content_dir"]
         self.articles_dir = os.path.join(self.content_dir, "articles")
+        self.virtual_root_dir = os.path.join(self.content_dir, "root")
 
         self.ensure_dirs_exists()
         self.articles()
-        self.root()
+        self.virtual_root()
         # self.download("https://unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js", "mathjax.js")
+
+        # Copy compiled wasm files to dist_dir
+        copy_dir(os.path.join(self.root_dir, "dist"), self.dist_dir)
 
     def ensure_dirs_exists(self):
         for d in [
@@ -136,7 +149,7 @@ class Main:
             while os.path.exists(os.path.join(self.res_dir, new_name)):
                 new_name = hash_string(new_name)+ext
             new_path = os.path.join(self.res_dir, new_name)
-            os.replace(copy(origin, self.res_dir), new_path)
+            os.replace(copy_file(origin, self.res_dir), new_path)
             res_files_map[origin] = new_name
         return res_files_map
 
@@ -188,13 +201,11 @@ class Main:
         index["articles"].sort(key=lambda a: a["pub_time"], reverse=True)
         write(os.path.join(self.manifests_dir, "index.json"), json.dumps(index))
 
-    def root(self):
-        root_dir = os.path.join(self.content_dir, "root")
-        if not os.path.exists(root_dir):
-            print(f"{root_dir} Not Exists.")
+    def virtual_root(self):
+        if not os.path.exists(self.virtual_root_dir):
+            print(f"{self.virtual_root_dir} Not Exists.")
             return
-        for f in ls(root_dir):
-            copy(f, self.dist_dir)
+        copy_dir(self.virtual_root_dir, self.dist_dir)
 
     def download(self, url: str, dst: str):
         resp = requests.get(url)

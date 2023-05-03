@@ -1,9 +1,13 @@
 #! /usr/bin/bash
 set -e
 
-ROOT=$(pwd)
+# Get script dir: https://stackoverflow.com/a/246128
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+ROOT=$(dirname -- "${SCRIPT_DIR}")
 BUILD_DIR=${ROOT}/build
 DOCKER_TAG=blog-frontend
+
+cd ${ROOT}
 
 rm -rf build dist
 
