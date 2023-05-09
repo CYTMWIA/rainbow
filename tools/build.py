@@ -99,7 +99,9 @@ class Main:
         # self.download("https://unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js", "mathjax.js")
 
         # Copy compiled wasm files to dist_dir
-        copy_dir(os.path.join(self.root_dir, "dist"), self.dist_dir)
+        root_dist = os.path.join(self.root_dir, "dist")
+        if os.path.abspath(root_dist) != os.path.abspath(self.dist_dir):
+            copy_dir(root_dist, self.dist_dir)
 
     def ensure_dirs_exists(self):
         for d in [

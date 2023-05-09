@@ -5,9 +5,9 @@ set -e
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 ROOT=$(dirname -- "${SCRIPT_DIR}")
 BUILD_DIR=${ROOT}/build
-DOCKER_TAG=blog-frontend
+DOCKER_TAG="rainbow-builder"
 
-cd ${ROOT}
+cd "${ROOT}"
 
 rm -rf build dist
 
@@ -16,7 +16,7 @@ if which docker; then
     docker run --user $(id -u):$(id -g) -v $(pwd):/ws ${DOCKER_TAG} ./scripts/build-core.sh
 else
     # Inside Docker
-    mkdir -p ${BUILD_DIR} && cd ${BUILD_DIR}
+    mkdir -p "${BUILD_DIR}" && cd "${BUILD_DIR}"
     emcmake cmake .. && make && make install
     exit 0
 fi
