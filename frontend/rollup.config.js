@@ -1,5 +1,3 @@
-import { nodeResolve } from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path'
 
@@ -16,6 +14,10 @@ async function* getFiles(dir) {
     }
 }
 
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import nodePolyfills from 'rollup-plugin-polyfill-node';
+
 let rollupList = [];
 for await (const file of getFiles('src-wasm')) {
     if (path.extname(file) === '.js' && !path.basename(file).startsWith('__')) {
@@ -26,7 +28,11 @@ for await (const file of getFiles('src-wasm')) {
                 file: outputPath,
                 format: 'iife'
             },
-            plugins: [nodeResolve(), commonjs()]
+            plugins: [
+                nodeResolve(),
+                commonjs(),
+                nodePolyfills(),
+            ]
         })
     }
 }

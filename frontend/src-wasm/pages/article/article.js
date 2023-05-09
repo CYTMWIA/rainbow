@@ -1,4 +1,4 @@
-import { parseQuery, getManifest } from '../../../src-js/common';
+import { parseQuery, getManifest, decryptString } from '../../../src-js/common';
 
 console.log("article.js running.");
 
@@ -16,22 +16,15 @@ let wasm = new Promise((resolve, reject) => {
     Module["onRuntimeInitialized"] = function () {
         let _render_markdown = Module.cwrap("render_markdown_c", "number", ["string"]);
         let render_markdown = (s) => UTF8ToString(_render_markdown(s));
-        let decrypt_string = Module.cwrap("decrypt_string", "number", ["string", "string", "string"]);
-        resolve({ decrypt_string: decrypt_string, render_markdown: render_markdown })
+        resolve({ render_markdown: render_markdown })
     };
 });
 
-Promise.all([manifest, wasm]).then(([manifest, wasm]) => {
+Promise.all([manifest, wasm]).then(async ([manifest, wasm]) => {
     if (manifest.encrypted === true) {
         console.log("Manifest was encrypted.");
-        console.log("Decrypting...");
-        let res = wasm.decrypt_string(manifest.data, query["password"], "AES-256-CBC");
-        if (-1 === res) {
-            alert("Decrypt data failed.");
-            return;
-        }
-        console.log("Success!");
-        manifest = JSON.parse(UTF8ToString(res));
+        let res = await decryptString(manifest["data"], manifest["iv"], query["password"]);
+        manifest = JSON.parse(res);
     }
 
     document.title = manifest.title;

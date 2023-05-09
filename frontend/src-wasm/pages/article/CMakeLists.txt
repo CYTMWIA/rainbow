@@ -6,14 +6,11 @@ target_include_directories(article PRIVATE
 
 target_link_libraries(article PRIVATE
     markdown
-    # openssl
-    /install/lib/libcrypto.a
-    /install/lib/libssl.a
 )
 
 target_link_options(article PRIVATE
     -sEXPORTED_RUNTIME_METHODS=ccall,cwrap
-    -sEXPORTED_FUNCTIONS=_main,_render_markdown_c,_decrypt_string
+    -sEXPORTED_FUNCTIONS=_main,_render_markdown_c
 
     -sSINGLE_FILE
 

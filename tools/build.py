@@ -14,34 +14,23 @@ import time
 import common
 import requests
 from common import load_config, ls, ls_abs, split_front_matter
-from cryptography.hazmat.primitives import padding
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 
 def hash_string(s: str):
     return hashlib.sha1(s.encode()).digest().hex()
 
 
-def get_cipher(password: str):
-    key_len = algorithms.AES256.key_size//8
-    iv_len = algorithms.AES256.block_size//8
-    total = key_len+iv_len
-    password = password.encode("utf-8")
-    password = (password*(int(total/len(password))+1))[:total]
-    key = password[:key_len]
-    iv = password[key_len:]
-    return Cipher(algorithms.AES256(key), modes.CBC(iv))
-
-
 def encrypt_string(s: str, password: str):
-    cipher = get_cipher(password)
-    encryptor = cipher.encryptor()
-    padder = padding.PKCS7(cipher.algorithm.block_size).padder()
+    key_len = 256  # bits
+    password = password.encode("utf-8")
+    key = (password*(int(key_len/len(password))+1))[:key_len//8]
+    aesgcm = AESGCM(key)
 
-    data = s.encode("utf-8")
-    data = padder.update(data) + padder.finalize()
-    data = encryptor.update(data) + encryptor.finalize()
-    return data
+    iv = os.urandom(12)
+    data = aesgcm.encrypt(iv, s.encode("utf-8"), None)
+
+    return data, iv
 
 
 def read(src: str):
@@ -184,11 +173,13 @@ class Main:
 
             password = article.get("password", None)
             if password:
-                data = encrypt_string(json.dumps(article), password)
+                data, iv = encrypt_string(json.dumps(article), password)
                 data = base64.b64encode(data).decode()
+                iv = base64.b64encode(iv).decode()
                 article = {
+                    "encrypted": True,
                     "data": data,
-                    "encrypted": True
+                    "iv": iv
                 }
             else:
                 index["articles"].append({
