@@ -1,0 +1,16 @@
+{
+  "name": "rainbow-frontend",
+  "version": "0.1.0",
+  "description": "rainbow frontend",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c && ./scripts/build-wasm.sh"
+  },
+  "author": "CYTMWIA",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^24.1.0",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "rollup": "^3.21.5"
+  }
+}

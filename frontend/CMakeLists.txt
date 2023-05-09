@@ -20,6 +20,6 @@ link_libraries(
     /install/lib/libssl.a
 )
 
-add_subdirectory(src/markdown)
-add_subdirectory(src/pages/index)
-add_subdirectory(src/pages/article)
+add_subdirectory(src-wasm/markdown)
+add_subdirectory(src-wasm/pages/index)
+add_subdirectory(src-wasm/pages/article)

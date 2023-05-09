@@ -7,11 +7,14 @@ target_include_directories(index PRIVATE /usr/include/eigen3)
 target_link_options(index PRIVATE
     -sEXPORTED_RUNTIME_METHODS=ccall,cwrap
     -sEXPORTED_FUNCTIONS=_main,_render_markdown_c
-    -sSINGLE_FILE
+
     -sMIN_WEBGL_VERSION=2
     -sMAX_WEBGL_VERSION=2
     -sFULL_ES3
-    --pre-js ${CMAKE_CURRENT_SOURCE_DIR}/main.js
+
+    --pre-js ${CMAKE_CURRENT_SOURCE_DIR}/__main.js
+
+    -sSINGLE_FILE
 )
 
 install(

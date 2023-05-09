@@ -1,13 +1,17 @@
+# Env
 venv
-**\__pycache__
+node_modules
 
-install/
+# Build
+**\__pycache__
 build-*/
 build/
-
 dist/
+install/
 output/
+__*.js
 
+# Dev
 .devcontainer/
 .vscode/
 config.json

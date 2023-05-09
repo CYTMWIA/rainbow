@@ -13,7 +13,7 @@ rm -rf build dist
 
 if which docker; then
     docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t ${DOCKER_TAG} .
-    docker run --user $(id -u):$(id -g) -v $(pwd):/ws ${DOCKER_TAG} ./scripts/build-core.sh
+    docker run --user $(id -u):$(id -g) -v $(pwd):/ws ${DOCKER_TAG} ./scripts/build-wasm.sh
 else
     # Inside Docker
     mkdir -p "${BUILD_DIR}" && cd "${BUILD_DIR}"

@@ -14,8 +14,15 @@ target_link_libraries(article PRIVATE
 target_link_options(article PRIVATE
     -sEXPORTED_RUNTIME_METHODS=ccall,cwrap
     -sEXPORTED_FUNCTIONS=_main,_render_markdown_c,_decrypt_string
+
     -sSINGLE_FILE
-    --pre-js ${CMAKE_CURRENT_SOURCE_DIR}/article.js
+
+    --pre-js ${CMAKE_CURRENT_SOURCE_DIR}/__article.js
+
+    -sALLOW_MEMORY_GROWTH
+
+    # -fsanitize=undefined
+    # -fsanitize=address
 )
 
 install(
