@@ -10,4 +10,4 @@ if [ ! -d "${ROOT}/frontend/dist" ]; then
 fi
 
 source ${ROOT}/venv/bin/activate
-python ${ROOT}/tools/build.py
+python ${ROOT}/tools/bundle.py
