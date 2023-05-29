@@ -10,6 +10,7 @@ dist/
 install/
 output/
 __*.js
+*.so
 
 # Dev
 .devcontainer/
