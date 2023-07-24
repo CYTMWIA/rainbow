@@ -4,29 +4,37 @@ import { ref, onMounted } from 'vue'
 const FPS = 30
 let max = (a, b) => (a > b ? a : b)
 let min = (a, b) => (a < b ? a : b)
+let minabs = (a, b) => (Math.abs(a) < Math.abs(b) ? a : b)
 let slot = ref(null)
 let transform = ref('unset')
 let shadow = ref('unset')
 onMounted(() => {
-    let now_x = 0, now_y = 0
+    let client_x = -1, client_y = 0
     addEventListener('mousemove', (ev) => {
+        client_x = ev.clientX
+        client_y = ev.clientY
+    })
+    let transform_x = 0, transform_y = 0
+    setInterval(() => {
+        if (client_x < 0) return;
+
         let slot_w = slot.value.clientWidth
         let slot_h = slot.value.clientHeight
         let slot_cx = slot.value.offsetLeft + (slot_w / 2.0)
         let slot_cy = slot.value.offsetTop + (slot_h / 2.0)
-        now_x = ((ev.clientX - slot_cx) / slot_w) * 2.0
-        now_y = ((ev.clientY - slot_cy) / slot_h) * 2.0
-    })
-    let inSlot = () => (1 >= Math.abs(now_x) && 1 >= Math.abs(now_y))
-    let transform_x = 0, transform_y = 0
-    setInterval(() => {
-        let target_x = 0, target_y = 0
-        if (!inSlot()) {
-            target_x = now_x
-            target_y = now_y
+        let now_x = ((client_x - slot_cx) / slot_w) * 2.0
+        let now_y = ((client_y - slot_cy) / slot_h) * 2.0
+
+        let target_x = now_x, target_y = now_y
+        if (1 >= Math.abs(now_x) && 1 >= Math.abs(now_y)) {
+            target_x = 0
+            target_y = 0
         }
-        transform_x += (target_x - transform_x) * (2.2 / FPS)
-        transform_y += (target_y - transform_y) * (2.2 / FPS)
+
+        let dx = target_x - transform_x // delta
+        transform_x += minabs((dx >= 0 ? 1 : -1) * (1.5 / FPS), dx)
+        let dy = target_y - transform_y
+        transform_y += minabs((dy >= 0 ? 1 : -1) * (1.5 / FPS), dy)
 
         // Do transform
         let x = max(-1.5, min(transform_x, 1.5))
