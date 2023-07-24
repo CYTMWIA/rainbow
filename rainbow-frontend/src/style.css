@@ -1,0 +1,11 @@
+body {
+  background-color: black;
+}
+
+a:visited {
+  color: gray;
+}
+
+a:link {
+  color: black;
+}
