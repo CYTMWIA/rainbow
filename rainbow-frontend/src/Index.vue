@@ -1,9 +1,8 @@
 <script setup>
-import BackgroundRandomRectangles from './components/BackgroundRandomRectangles.vue'
+import BackgroundGameOfLife from './components/BackgroundGameOfLife.vue'
 import Markdown from './components/Markdown.vue'
 import axios from 'axios'
 import { ref } from 'vue'
-import FaceCursor from './components/FaceCursor.vue'
 
 let manifest = ref({
   about: '',
@@ -30,7 +29,7 @@ axios.get("manifests/index.json").then(function (response) {
       </div>
     </div>
   </div>
-  <BackgroundRandomRectangles></BackgroundRandomRectangles>
+  <BackgroundGameOfLife></BackgroundGameOfLife>
 </template>
 
 <style scoped>
