@@ -36,7 +36,7 @@ axios.get("manifests/index.json").then(function (response) {
 <style scoped>
 .article-item {
   border-bottom: solid;
-  border-color: #80808077;
+  border-color: #44444478;
   border-width: 2px;
   width: 100%;
   display: flex;
