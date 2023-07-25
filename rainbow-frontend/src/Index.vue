@@ -3,6 +3,7 @@ import BackgroundGameOfLife from './components/BackgroundGameOfLife.vue'
 import Markdown from './components/Markdown.vue'
 import axios from 'axios'
 import { ref } from 'vue'
+import { formatTimeFromTimestamp } from './common/formatTime'
 
 let manifest = ref({
   about: '',
@@ -25,7 +26,7 @@ axios.get("manifests/index.json").then(function (response) {
     <div>
       <div class="article-item" v-for="art in manifest.articles">
         <a :href="'article.html?' + art.manifest">{{ art.title }}</a>
-        <div>{{ (new Date(art.pub_time * 1000)).toLocaleString() }}</div>
+        <div>{{ formatTimeFromTimestamp(art.pub_time) }}</div>
       </div>
     </div>
   </div>

@@ -5,13 +5,12 @@ import axios from 'axios'
 import { ref } from 'vue'
 import { parseQuery } from './common/parseQuery'
 import { decryptString } from './common/decryptString'
+import { formatTimeFromTimestamp } from './common/formatTime'
 
 let manifest = ref({
   "title": "Loading",
   "content": "Loading"
 })
-
-let epoch2str = (ts) => (new Date(ts * 1000)).toLocaleString();
 
 let query = parseQuery()
 let manifest_file = (query[""] !== undefined) ? query[""] : query["manifest"];
@@ -40,11 +39,11 @@ axios.get(`manifests/${manifest_file}`).then(async function (response) {
         <tbody>
           <tr v-if="manifest.pub_time">
             <td>Published</td>
-            <td>{{ epoch2str(manifest.pub_time) }}</td>
+            <td>{{ formatTimeFromTimestamp(manifest.pub_time) }}</td>
           </tr>
           <tr v-if="manifest.mod_time">
             <td>Modified</td>
-            <td>{{ epoch2str(manifest.mod_time) }}</td>
+            <td>{{ formatTimeFromTimestamp(manifest.mod_time) }}</td>
           </tr>
         </tbody>
       </table>
