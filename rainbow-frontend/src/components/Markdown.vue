@@ -9,7 +9,7 @@ const props = defineProps(['raw'])
 let renderer = new MarkdownIt({
     html: true,
     linkify: true,
-    typographer: true
+    typographer: false
 })
 
 function render(raw) {
