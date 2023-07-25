@@ -2,8 +2,17 @@ body {
   background-color: black;
 }
 
+.main-container>* {
+  width: 82ch;
+  padding: 1ch;
+  margin: auto;
+  margin-bottom: 2ch;
+  background-color: #FFFFFF77;
+  backdrop-filter: blur(2em);
+}
+
 a:visited {
-  color: gray;
+  color: black;
 }
 
 a:link {

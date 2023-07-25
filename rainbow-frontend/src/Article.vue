@@ -33,7 +33,7 @@ axios.get(`manifests/${manifest_file}`).then(async function (response) {
 </script>
 
 <template>
-  <div id="Article">
+  <div class="main-container">
     <div class="metadata">
       <h1>{{ manifest.title }}</h1>
       <table>
@@ -55,14 +55,6 @@ axios.get(`manifests/${manifest_file}`).then(async function (response) {
 </template>
 
 <style scoped>
-#Article>* {
-  width: 82ch;
-  padding: 1ch;
-  margin: auto;
-  margin-bottom: 2ch;
-  background-color: #FFFFFFD0;
-}
-
 .metadata {
   display: flex;
   flex-direction: column;

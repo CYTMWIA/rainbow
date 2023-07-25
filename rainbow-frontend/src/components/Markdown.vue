@@ -59,7 +59,7 @@ article img {
 
 article pre,
 article code {
-    background-color: whitesmoke;
+    background-color: #f5f5f577;
     padding: .1em .4em;
     /* border-radius: 6px; */
     font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
@@ -77,8 +77,8 @@ article pre>code {
 article blockquote {
     border-left: solid;
     border-left-width: thick;
-    border-left-color: darkgray;
-    background: whitesmoke;
+    border-left-color: #00000077;
+    background: #f5f5f577;
     padding-left: 1ch;
 }
 
@@ -100,12 +100,11 @@ article table>* {
 
 article th,
 article td {
-    border: solid 1px darkgray;
-
+    border: solid 0.1em #ffffff77;
 }
 
 article table tbody tr:nth-child(2n-1) {
-    background-color: gainsboro;
+    background-color: #ffffff77;
 }
 </style>
   

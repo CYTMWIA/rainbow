@@ -21,32 +21,22 @@ axios.get("manifests/index.json").then(function (response) {
 </script>
 
 <template>
-  <div id="index">
-    <FaceCursor>
-      <Markdown :raw="manifest.about"></Markdown>
-    </FaceCursor>
-    <FaceCursor>
+  <div class="main-container">
+    <Markdown :raw="manifest.about"></Markdown>
+    <div>
       <div class="article-item" v-for="art in manifest.articles">
         <a :href="'article.html?' + art.manifest">{{ art.title }}</a>
         <div>{{ (new Date(art.pub_time * 1000)).toLocaleString() }}</div>
       </div>
-    </FaceCursor>
+    </div>
   </div>
   <BackgroundRandomRectangles></BackgroundRandomRectangles>
 </template>
 
 <style scoped>
-#index>* {
-  width: 82ch;
-  padding: 1ch;
-  margin: auto;
-  margin-bottom: 2ch;
-  background-color: #FFFFFFD0;
-}
-
 .article-item {
   border-bottom: solid;
-  border-color: gray;
+  border-color: #80808077;
   border-width: 2px;
   width: 100%;
   display: flex;
@@ -62,6 +52,6 @@ axios.get("manifests/index.json").then(function (response) {
 .article-item>*:last-child {
   margin-right: 0;
   margin-left: auto;
-  color: darkgray;
+  color: #333333;
 }
 </style>
