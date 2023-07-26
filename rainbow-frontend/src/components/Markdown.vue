@@ -59,7 +59,7 @@ article img {
 
 article pre,
 article code {
-    background-color: #f5f5f577;
+    background-color: lightgray;
     padding: .1em .4em;
     /* border-radius: 6px; */
     font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
