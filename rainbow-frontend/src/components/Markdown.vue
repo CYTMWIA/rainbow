@@ -78,7 +78,7 @@ article blockquote {
     border-left: solid;
     border-left-width: thick;
     border-left-color: #00000077;
-    background: #f5f5f577;
+    background: lightgray;
     padding-left: 1ch;
 }
 
@@ -100,11 +100,11 @@ article table>* {
 
 article th,
 article td {
-    border: solid 0.1em #ffffff77;
+    border: solid 0.1em darkgray;
 }
 
 article table tbody tr:nth-child(2n-1) {
-    background-color: #ffffff77;
+    background-color: lightgray;
 }
 </style>
   

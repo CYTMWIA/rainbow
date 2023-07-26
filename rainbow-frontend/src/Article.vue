@@ -1,5 +1,4 @@
 <script setup>
-import BackgroundGameOfLife from './components/BackgroundGameOfLife.vue'
 import Markdown from './components/Markdown.vue'
 import axios from 'axios'
 import { ref } from 'vue'
@@ -50,7 +49,6 @@ axios.get(`manifests/${manifest_file}`).then(async function (response) {
     </div>
     <Markdown :raw="manifest.content"></Markdown>
   </div>
-  <BackgroundGameOfLife></BackgroundGameOfLife>
 </template>
 
 <style scoped>

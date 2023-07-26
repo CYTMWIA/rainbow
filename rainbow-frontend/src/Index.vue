@@ -21,6 +21,10 @@ axios.get("manifests/index.json").then(function (response) {
 </script>
 
 <template>
+  <div class="welcome">
+    <h1>{{ manifest.title }}</h1>
+    <BackgroundGameOfLife></BackgroundGameOfLife>
+  </div>
   <div class="main-container">
     <Markdown :raw="manifest.about"></Markdown>
     <div>
@@ -30,10 +34,26 @@ axios.get("manifests/index.json").then(function (response) {
       </div>
     </div>
   </div>
-  <BackgroundGameOfLife></BackgroundGameOfLife>
 </template>
 
 <style scoped>
+.welcome {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  margin-bottom: 2em;
+}
+
+.welcome>h1 {
+  color: white;
+  margin: auto;
+  padding: 0.2em 0.6em;
+  font-size: 3.2em;
+  background: #86868677;
+  backdrop-filter: blur(1em);
+}
+
 .article-item {
   border-bottom: solid;
   border-color: #44444478;

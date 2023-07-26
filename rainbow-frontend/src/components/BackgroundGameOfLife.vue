@@ -20,8 +20,8 @@ let canvas_ctx = null
 let canvas_width = 0, canvas_height = 0
 function init() {
     canvas_ctx = canvas.value.getContext('2d')
-    canvas_width = window.innerWidth
-    canvas_height = 2 * window.innerHeight
+    canvas_width = canvas.value.clientWidth
+    canvas_height = canvas.value.clientHeight
     canvas.value.setAttribute('width', canvas_width)
     canvas.value.setAttribute('height', canvas_height)
 }
@@ -101,9 +101,9 @@ onMounted(() => {
 </script>
   
 <template>
-    <Teleport to="body">
-        <canvas class="bg" ref="canvas"></canvas>
-    </Teleport>
+    <!-- <Teleport to="body"> -->
+    <canvas class="bg" ref="canvas"></canvas>
+    <!-- </Teleport> -->
 </template>
 
 <style scoped>
@@ -112,6 +112,8 @@ onMounted(() => {
     top: 0;
     left: 0;
     z-index: -9999;
+    width: 100%;
+    height: 100%;
 }
 </style>
   
