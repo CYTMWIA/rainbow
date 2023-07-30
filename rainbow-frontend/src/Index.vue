@@ -1,6 +1,7 @@
 <script setup>
 import BackgroundGameOfLife from './components/BackgroundGameOfLife.vue'
 import Markdown from './components/Markdown.vue'
+import FaceCursor from './components/FaceCursor.vue'
 import axios from 'axios'
 import { ref } from 'vue'
 import { formatTimeFromTimestamp } from './common/formatTime'
@@ -22,7 +23,9 @@ axios.get("manifests/index.json").then(function (response) {
 
 <template>
   <div class="welcome">
-    <h1>{{ manifest.title }}</h1>
+    <FaceCursor style="margin: auto;">
+      <h1 class="title">{{ manifest.title }}</h1>
+    </FaceCursor>
     <BackgroundGameOfLife></BackgroundGameOfLife>
   </div>
   <div class="main-container">
@@ -45,13 +48,13 @@ axios.get("manifests/index.json").then(function (response) {
   margin-bottom: 2em;
 }
 
-.welcome>h1 {
+.welcome .title {
   color: white;
   margin: auto;
   padding: 0.2em 0.6em;
   font-size: 3.2em;
   background: #86868677;
-  backdrop-filter: blur(1em);
+  backdrop-filter: blur(0.5em);
 }
 
 .article-item {

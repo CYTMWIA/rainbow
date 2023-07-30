@@ -18,15 +18,17 @@ onMounted(() => {
     setInterval(() => {
         if (client_x < 0) return;
 
+        let window_w = window.innerWidth
+        let window_h = window.innerHeight
         let slot_w = slot.value.clientWidth
         let slot_h = slot.value.clientHeight
         let slot_cx = slot.value.offsetLeft + (slot_w / 2.0)
         let slot_cy = slot.value.offsetTop + (slot_h / 2.0)
-        let now_x = ((client_x - slot_cx) / slot_w) * 2.0
-        let now_y = ((client_y - slot_cy) / slot_h) * 2.0
+        let now_x = ((client_x - slot_cx) / window_w) * 2.0
+        let now_y = ((client_y - slot_cy) / window_h) * 2.0
 
         let target_x = now_x, target_y = now_y
-        if (1 >= Math.abs(now_x) && 1 >= Math.abs(now_y)) {
+        if ((slot_w / window_w) >= Math.abs(now_x) && (slot_h / window_h) >= Math.abs(now_y)) {
             target_x = 0
             target_y = 0
         }
@@ -46,10 +48,15 @@ onMounted(() => {
 </script>
   
 <template>
-    <div ref="slot" :style="{ transform: transform, 'box-shadow': shadow }">
+    <div class="slot" ref="slot" :style="{ transform: transform, 'box-shadow': shadow }">
         <slot></slot>
     </div>
 </template>
   
-<style></style>
+<style scoped>
+.slot {
+    width: max-content;
+    height: max-content;
+}
+</style>
   
