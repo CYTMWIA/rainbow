@@ -1,4 +1,4 @@
-import path from './src/path'
+import { basename, join } from "path";
 import { render } from "nunjucks";
 
 const __dirname = import.meta.dir
@@ -6,11 +6,11 @@ const __dirname = import.meta.dir
 // Configs
 
 const output_dir = 'dist'
-const templates_dir = path.join(__dirname, 'templates')
+const templates_dir = join(__dirname, 'templates')
 const pages = [
     {
         title: 'Index',
-        entrypoint: path.join(__dirname, '/src/index.jsx'),
+        entrypoint: join(__dirname, '/src/index.jsx'),
         path: 'index.html',
         stylesheets: ['style.css']
     }
@@ -31,7 +31,7 @@ pages.forEach(async (page) => {
     }).then((output) => {
         if (output.success) {
             console.log('OK', page.entrypoint)
-            build_result.scripts.push(path.basename(output.outputs[0].path))
+            build_result.scripts.push(basename(output.outputs[0].path))
         } else {
             console.error('FAIL', page.entrypoint)
             console.error(output)
@@ -39,6 +39,6 @@ pages.forEach(async (page) => {
     })
 
     let final = { ...page, ...build_result }
-    let html = render(path.join(templates_dir, 'page.html'), final)
-    await Bun.write(path.join(output_dir, page.path), html)
+    let html = render(join(templates_dir, 'page.html'), final)
+    await Bun.write(join(output_dir, page.path), html)
 })
