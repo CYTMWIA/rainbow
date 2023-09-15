@@ -1,6 +1,6 @@
 {
   "name": "rainbow",
-  "module": "build.js",
+  "module": "build.ts",
   "type": "module",
   "devDependencies": {
     "bun-types": "latest"
@@ -9,6 +9,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "nunjucks": "^3.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }
