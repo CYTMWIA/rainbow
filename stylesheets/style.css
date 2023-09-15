@@ -1,0 +1,47 @@
+body {
+    display: flex;
+    min-height: 150vh;
+}
+
+.menu {
+    position: sticky;
+    top: 5vh;
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    height: 90vh;
+    text-align: right;
+    border-right: solid 2px;
+}
+
+/* first-of-class
+ * https://stackoverflow.com/questions/2717480/css-selector-for-first-element-with-class
+ */
+
+.menu .bottom {
+    margin-top: auto;
+
+}
+
+.menu .bottom~.bottom {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.menu>* {
+    padding: 0.2em 0.5em;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+.menu>*:hover {
+    color: white;
+    background-color: black;
+    animation-play-state: running;
+}
+
+#content {
+    width: 50%;
+    padding-left: 0.5em;
+}

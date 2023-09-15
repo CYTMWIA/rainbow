@@ -1,5 +1,6 @@
 import path from './src/path'
 import { render } from "nunjucks";
+
 const __dirname = import.meta.dir
 
 // Configs
@@ -11,6 +12,7 @@ const pages = [
         title: 'Index',
         entrypoint: path.join(__dirname, '/src/index.jsx'),
         path: 'index.html',
+        stylesheets: ['style.css']
     }
 ]
 
