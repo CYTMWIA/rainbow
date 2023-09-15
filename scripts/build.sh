@@ -5,12 +5,9 @@ set -e
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 ROOT=$(dirname -- "${SCRIPT_DIR}")
 
-pushd ${ROOT}/rainbow-frontend
-npm run build
-popd
+cd $ROOT
 
-mkdir -p dist
-cp -rf ${ROOT}/rainbow-frontend/dist/* ./dist
+rm -rf ./dist
 
-source ${ROOT}/venv/bin/activate
-python ${ROOT}/tools/bundle.py
+bun run build.ts
+cp -R -t ./dist ./stylesheets/*
