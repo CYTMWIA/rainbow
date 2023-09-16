@@ -6,11 +6,11 @@ body {
 
 .menu {
     position: sticky;
-    top: 5vh;
+    top: 2vh;
     display: flex;
     flex-direction: column;
     width: max-content;
-    height: 90vh;
+    height: 96vh;
     text-align: right;
     border-right: solid 2px;
 }
@@ -33,7 +33,7 @@ body {
     padding: 0.2em 0.5em;
     text-decoration: none;
     color: black;
-    font-weight: bold;
+    /* font-weight: bold; */
 }
 
 .menu>*:hover {
