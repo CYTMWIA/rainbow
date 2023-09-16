@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { Article, EncryptedArticle, add_script_node, mount_app, parse_query } from '../common';
+import { Manifest, add_script_node, mount_app, parse_query } from '../common';
 import { decrypt } from '../crypto';
 import { useEffect, useState } from 'react';
 import { marked } from 'marked';
 
 function Content() {
-    const [article, set_article] = useState<Article>({
+    const [article, set_article] = useState<Manifest.Article>({
         title: 'Loading...',
         pub_time: 0,
         mod_time: 0,
@@ -22,9 +22,9 @@ function Content() {
             }
 
             let resp_data = response.data
-            if ((resp_data as EncryptedArticle).iv) {
-                let ea = resp_data as EncryptedArticle
-                if (query.password !== null) {
+            if ((resp_data as Manifest.EncryptedArticle).iv) {
+                let ea = resp_data as Manifest.EncryptedArticle
+                if (query.password) {
                     let json_str = await decrypt(ea.data, ea.iv, query.password)
                     set_article(JSON.parse(json_str))
                 }

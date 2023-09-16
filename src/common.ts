@@ -3,33 +3,51 @@ import { createRoot } from "react-dom/client";
 
 export interface Query {
     manifest: string,
-    password: string | null,
+    password?: string,
     [key: string]: any
 }
 
 export interface Article {
+    fs_path: string,
+
     title: string,
     pub_time: number,
     mod_time: number,
+
     content: string,
+
+    encrypt?: {
+        password: string,
+        data: string,
+        iv: string,
+    }
 };
 
-export interface EncryptedArticle {
-    data: string,
-    iv: string,
-};
+export namespace Manifest {
+    export interface Article {
+        title: string,
+        pub_time: number,
+        mod_time: number,
+        content: string,
+    };
 
-export interface ArticlesListItem {
-    title: string,
-    manifest: string,
-    pub_time: number,
+    export interface EncryptedArticle {
+        data: string,
+        iv: string,
+    };
+
+    export interface ArticlesListItem {
+        manifest: string,
+        title: string,
+        pub_time: number,
+    }
 }
 
 export function parse_query(default_manifest: string): Query {
     let qstr = document.location.search;
     let query: Query = {
         manifest: default_manifest,
-        password: null
+        password: undefined
     }
     let state = 'NONE', begin = 0, key = ''
     for (let i = 0; i < qstr.length; i += 1) {
