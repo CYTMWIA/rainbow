@@ -69,3 +69,10 @@ export function format_time(ts: number) {
     let ss = d.getSeconds().toString().padStart(2, '0')
     return `${YYYY}/${MM}/${DD} ${hh}:${mm}:${ss}`
 }
+
+export function random_background_color() {
+    let h = (Math.random() * 360).toString() + 'deg'
+    let s = (Math.random() * 100) + '%'
+    let l = (80 + Math.random() * 15) + '%'
+    document.body.style.backgroundColor = `hsl(${h}, ${s}, ${l})`
+}

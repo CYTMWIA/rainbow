@@ -5,13 +5,6 @@ import { decrypt } from './crypto';
 import { useEffect, useState } from 'react';
 import { marked } from 'marked';
 
-function random_background_color() {
-    let h = (Math.random() * 360).toString() + 'deg'
-    let s = (Math.random() * 100) + '%'
-    let l = (80 + Math.random() * 15) + '%'
-    document.body.style.backgroundColor = `hsl(${h}, ${s}, ${l})`
-}
-
 function Content() {
     const [article, set_article] = useState<Article>({
         title: 'Loading...',
@@ -49,6 +42,5 @@ function Content() {
     </>)
 }
 
-random_background_color()
 const root = createRoot(document.getElementById('content'))
 root.render(<Content></Content>)

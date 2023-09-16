@@ -1,6 +1,7 @@
 body {
     display: flex;
     min-height: 150vh;
+    background-color: whitesmoke;
 }
 
 .menu {
@@ -52,14 +53,17 @@ body {
 
 .articles_list>* {
     display: flex;
-    border-bottom: solid;
-    border-bottom-width: 1px;
-    border-bottom-style: dashed;
     margin-bottom: 0.2em;
+    padding: 0.1em 0.2em;
+}
+
+.articles_list>*:hover {
+    background-color: lightgray;
 }
 
 .articles_list * {
     text-decoration: none;
+    font-size: 12pt;
 }
 
 .articles_list>*>*:last-child {
