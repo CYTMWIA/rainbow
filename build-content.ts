@@ -21,7 +21,7 @@ async function output_manifest(name: string, obj: any) {
 async function output_article(article: Article) {
     let obj
     if (article.encrypt) {
-        (<Manifest.EncryptedArticle><unknown>obj) = {
+        (<Manifest.EncryptedManifest><unknown>obj) = {
             data: article.encrypt.data,
             iv: article.encrypt.iv
         }

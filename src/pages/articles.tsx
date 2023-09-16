@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Manifest, format_time, mount_app, parse_query } from '../common';
+import { Manifest, fetch_manifest, format_time, mount_app, parse_query } from '../common';
 import { decrypt } from '../crypto';
 import { useEffect, useState } from 'react';
 
@@ -8,23 +8,8 @@ function Content() {
 
     let query = parse_query('_articles.json')
     useEffect(() => {
-        new Promise(async () => {
-            let response = await axios.get(`manifests/${query.manifest}`)
-            if (response.status !== 200) {
-                alert(`${query.manifest} 获取失败`)
-                return
-            }
-
-            let resp_data = response.data
-            if ((resp_data as Manifest.EncryptedArticle).iv) {
-                let ea = resp_data as Manifest.EncryptedArticle
-                if (query.password) {
-                    let json_str = await decrypt(ea.data, ea.iv, query.password)
-                    set_articles(JSON.parse(json_str))
-                }
-            } else {
-                set_articles(resp_data)
-            }
+        fetch_manifest(query.manifest, query.password).then((manifest) => {
+            set_articles(manifest)
         })
     }, [query.manifest]);
 

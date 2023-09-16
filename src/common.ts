@@ -1,5 +1,7 @@
+import axios, { AxiosResponse } from "axios";
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { decrypt } from "./crypto";
 
 export interface Query {
     manifest: string,
@@ -31,7 +33,7 @@ export namespace Manifest {
         content: string,
     };
 
-    export interface EncryptedArticle {
+    export interface EncryptedManifest {
         data: string,
         iv: string,
     };
@@ -119,4 +121,27 @@ export function add_script_node(src: string, opt?: { async_?: boolean, defer?: b
     script.async = opt ? (opt.async_ ? opt.async_ : false) : (false)
     script.defer = opt ? (opt.defer ? opt.defer : false) : (false)
     document.head.appendChild(script);
+}
+
+export async function fetch_manifest(name: string, password?: string) {
+    let response: AxiosResponse<any, any>
+    try {
+        response = await axios.get(`manifests/${name}`)
+        if (response.status !== 200)
+            throw Error('response.status !== 200')
+    } catch (error) {
+        alert(`${name} 获取失败`)
+        return
+    }
+
+    let resp_data = response.data
+    if ((resp_data as Manifest.EncryptedManifest).iv) {
+        let ea = resp_data as Manifest.EncryptedManifest
+        if (password) {
+            let json_str = await decrypt(ea.data, ea.iv, password)
+            return JSON.parse(json_str)
+        }
+    } else {
+        return response.data
+    }
 }
