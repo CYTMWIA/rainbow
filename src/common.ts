@@ -89,3 +89,11 @@ export function mount_app(node: React.ReactNode) {
     }
     else console.log("document.getElementById('content') failed!")
 }
+
+export function add_script_node(src: string, opt?: { async_?: boolean, defer?: boolean }) {
+    let script = document.createElement('script');
+    script.setAttribute('src', src);
+    script.async = opt ? (opt.async_ ? opt.async_ : false) : (false)
+    script.defer = opt ? (opt.defer ? opt.defer : false) : (false)
+    document.head.appendChild(script);
+}

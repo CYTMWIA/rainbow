@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Article, EncryptedArticle, mount_app, parse_query } from './common';
+import { Article, EncryptedArticle, add_script_node, mount_app, parse_query } from './common';
 import { decrypt } from './crypto';
 import { useEffect, useState } from 'react';
 import { marked } from 'marked';
@@ -32,6 +32,10 @@ function Content() {
             } else {
                 set_article(response.data)
             }
+
+            // https://www.mathjax.org/#gettingstarted
+            add_script_node('https://polyfill.io/v3/polyfill.min.js?features=es6')
+            add_script_node('https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js', { async_: true })
         })
     }, [query.manifest]);
 
