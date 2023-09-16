@@ -28,6 +28,7 @@ pages.forEach(async (page) => {
     await Bun.build({
         entrypoints: [page.entrypoint],
         outdir: output_dir,
+        minify: true,
     }).then((output) => {
         if (output.success) {
             console.log('OK', page.entrypoint)

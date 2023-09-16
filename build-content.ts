@@ -2,21 +2,10 @@ import { lstat, mkdir, readFile, readdir } from "fs/promises";
 import { basename, extname, join } from "path";
 import { parse, stringify } from 'yaml'
 import { encrypt } from "./src/crypto";
+import { Article, EncryptedArticle } from "./src/common";
 
 const output_dir = 'dist'
 const content_dir = 'content'
-
-interface Article {
-    title: string,
-    pub_time: number,
-    mod_time: number,
-    content: string,
-};
-
-interface EncryptedArticle {
-    data: string,
-    iv: string,
-};
 
 async function find_md_file(path: string) {
     let stat = await lstat(path)

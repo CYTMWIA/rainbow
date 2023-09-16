@@ -11,3 +11,6 @@ rm -rf ./dist
 
 bun run build.ts
 cp -R -t ./dist ./stylesheets/*
+
+cd ./dist
+du -sh *
