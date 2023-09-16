@@ -27,6 +27,7 @@ async function parse_article_file(path: string): Promise<Article | EncryptedArti
     let meta_split = raw.match(/[^\n]\s*?---\s*?[$\n]/)
     let res = {
         title: 'no title',
+        manifest: '',
         pub_time: 0,
         mod_time: 0,
         content: raw,
@@ -56,11 +57,14 @@ async function process_article(path: string) {
     if (article_file === null) return null
 
     let article = await parse_article_file(article_file)
+    if ((<Article>article).content) {
+        (<Article>article).manifest = get_manifest_name(basename(path))
+    }
     return article
 }
 
-function get_manifest_name(filename: string) {
-    return basename(filename, '.md') + '.json'
+function get_manifest_name(article_path: string) {
+    return basename(article_path, '.md') + '.json'
 }
 
 async function output_manifest(name: string, obj: any) {

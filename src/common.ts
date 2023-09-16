@@ -6,6 +6,7 @@ export interface Query {
 
 export interface Article {
     title: string,
+    manifest: string,
     pub_time: number,
     mod_time: number,
     content: string,

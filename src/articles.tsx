@@ -32,8 +32,8 @@ function Content() {
 
     articles.sort((a, b) => b.pub_time - a.pub_time) // 按发布时间降序
     const list = articles.map((art) => {
-        return <li key={art.title}>
-            <a href={`index.html?`}>{art.title}</a>
+        return <li key={art.manifest}>
+            <a href={`index.html?${art.manifest}`}>{art.title}</a>
             <div>{format_time(art.pub_time)}</div>
         </li>
     })
