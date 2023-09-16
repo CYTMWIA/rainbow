@@ -1,3 +1,6 @@
+import React from "react";
+import { createRoot } from "react-dom/client";
+
 export interface Query {
     manifest: string,
     password: string | null,
@@ -76,4 +79,13 @@ export function random_background_color() {
     let s = (Math.random() * 100) + '%'
     let l = (80 + Math.random() * 15) + '%'
     document.body.style.backgroundColor = `hsl(${h}, ${s}, ${l})`
+}
+
+export function mount_app(node: React.ReactNode) {
+    const mount_point = document.getElementById('content')
+    if (mount_point !== null) {
+        const root = createRoot(mount_point)
+        root.render(node)
+    }
+    else console.log("document.getElementById('content') failed!")
 }

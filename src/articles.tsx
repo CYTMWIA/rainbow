@@ -1,9 +1,7 @@
 import axios from 'axios';
-import { createRoot } from 'react-dom/client';
-import { Article, EncryptedArticle, format_time, parse_query } from './common';
+import { Article, EncryptedArticle, format_time, mount_app, parse_query } from './common';
 import { decrypt } from './crypto';
 import { useEffect, useState } from 'react';
-import { marked } from 'marked';
 
 function Content() {
     const [articles, set_articles] = useState<Article[]>([])
@@ -43,5 +41,4 @@ function Content() {
     </>
 }
 
-const root = createRoot(document.getElementById('content'))
-root.render(<Content></Content>)
+mount_app(<Content></Content>)
