@@ -9,7 +9,6 @@ export interface Query {
 
 export interface Article {
     title: string,
-    manifest: string,
     pub_time: number,
     mod_time: number,
     content: string,
@@ -19,6 +18,12 @@ export interface EncryptedArticle {
     data: string,
     iv: string,
 };
+
+export interface ArticlesListItem {
+    title: string,
+    manifest: string,
+    pub_time: number,
+}
 
 export function parse_query(default_manifest: string): Query {
     let qstr = document.location.search;

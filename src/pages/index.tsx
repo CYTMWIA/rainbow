@@ -7,7 +7,6 @@ import { marked } from 'marked';
 function Content() {
     const [article, set_article] = useState<Article>({
         title: 'Loading...',
-        manifest: '',
         pub_time: 0,
         mod_time: 0,
         content: ''

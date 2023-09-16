@@ -2,7 +2,7 @@ import { lstat, mkdir, readFile, readdir } from "fs/promises";
 import { basename, extname, join } from "path";
 import { parse, stringify } from 'yaml'
 import { encrypt } from "./src/crypto";
-import { Article, EncryptedArticle } from "./src/common";
+import { Article, ArticlesListItem, EncryptedArticle } from "./src/common";
 
 const output_dir = 'dist'
 const content_dir = 'content'
@@ -57,9 +57,6 @@ async function process_article(path: string) {
     if (article_file === null) return null
 
     let article = await parse_article_file(article_file)
-    if ((<Article>article).content) {
-        (<Article>article).manifest = get_manifest_name(basename(path))
-    }
     return article
 }
 
@@ -84,15 +81,20 @@ await Promise.all(files.map(async (filename) => {
     if (filename === 'articles') {
         let articles_dir = join(content_dir, filename)
         let article_dirs = await readdir(articles_dir)
-        let articles: Article[] = []
+        let articles: ArticlesListItem[] = []
         await Promise.all(article_dirs.map(async (adir) => {
             let res = await process_article(join(articles_dir, adir))
             if (res === null) return;
             await output_manifest(get_manifest_name(adir), res)
-            if ((<Article>res).title)
-                articles.push((<Article>res))
+            if ((<Article>res).title) {
+                let art = (<Article>res)
+                articles.push({
+                    title: art.title,
+                    pub_time: art.pub_time,
+                    manifest: get_manifest_name(adir)
+                })
+            }
         }))
-        articles.forEach((ref) => { ref.content = "" })
         await output_manifest('_articles.json', articles)
     } else {
         let res = await process_article(join(content_dir, filename))

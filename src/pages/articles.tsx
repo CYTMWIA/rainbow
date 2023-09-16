@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { Article, EncryptedArticle, format_time, mount_app, parse_query } from '../common';
+import { Article, ArticlesListItem, EncryptedArticle, format_time, mount_app, parse_query } from '../common';
 import { decrypt } from '../crypto';
 import { useEffect, useState } from 'react';
 
 function Content() {
-    const [articles, set_articles] = useState<Article[]>([])
+    const [articles, set_articles] = useState<ArticlesListItem[]>([])
 
     let query = parse_query('_articles.json')
     useEffect(() => {
