@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { Article, EncryptedArticle, format_time, mount_app, parse_query } from './common';
-import { decrypt } from './crypto';
+import { Article, EncryptedArticle, format_time, mount_app, parse_query } from '../common';
+import { decrypt } from '../crypto';
 import { useEffect, useState } from 'react';
 
 function Content() {

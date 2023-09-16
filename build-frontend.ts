@@ -14,13 +14,13 @@ const templates_dir = join(__dirname, 'templates')
 const pages = [
     {
         title: 'Index',
-        entrypoint: join(__dirname, '/src/index.jsx'),
+        entrypoint: join(__dirname, '/src/pages/index.jsx'),
         path: 'index.html',
         stylesheets: ['style.css']
     },
     {
         title: 'Articles',
-        entrypoint: join(__dirname, '/src/articles.jsx'),
+        entrypoint: join(__dirname, '/src/pages/articles.jsx'),
         path: 'articles.html',
         stylesheets: ['style.css']
     }
