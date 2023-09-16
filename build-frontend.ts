@@ -13,6 +13,12 @@ const pages = [
         entrypoint: join(__dirname, '/src/index.jsx'),
         path: 'index.html',
         stylesheets: ['style.css']
+    },
+    {
+        title: 'Articles',
+        entrypoint: join(__dirname, '/src/articles.jsx'),
+        path: 'articles.html',
+        stylesheets: ['style.css']
     }
 ]
 
