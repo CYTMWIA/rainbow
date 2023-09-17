@@ -25,6 +25,9 @@ function Content() {
 
     document.title = article.title
 
+    marked.use({
+        gfm: true,
+    });
     const article_html = { __html: marked.parse(article.content) }
     return (<>
         <h1>{article.title}</h1>

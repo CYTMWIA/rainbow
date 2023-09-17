@@ -1,7 +1,7 @@
 body {
     display: flex;
     min-height: 150vh;
-    background-color: whitesmoke;
+    /* background-color: whitesmoke; */
 }
 
 .menu {
@@ -79,6 +79,10 @@ body {
 
 article p {
     line-height: 1.6;
+}
+
+article>p,
+article>blockquote>p {
     text-indent: 2em;
 }
 
@@ -96,6 +100,7 @@ article img {
 
 article pre,
 article code {
+    min-width: 100%;
     width: max-content;
     background-color: lightgray;
     padding: .1em .4em;
@@ -114,8 +119,8 @@ article blockquote {
     border-left: solid;
     border-left-width: thick;
     border-left-color: #00000077;
-    background: lightgray;
-    padding-left: 1ch;
+    background: whitesmoke;
+    padding: 0 0.5em;
 }
 
 /* Table */
