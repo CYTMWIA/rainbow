@@ -13,8 +13,8 @@ export interface Article {
     fs_path: string,
 
     title: string,
-    pub_time: number,
-    mod_time: number,
+    pub_time?: number,
+    mod_time?: number,
 
     content: string,
 
@@ -28,8 +28,8 @@ export interface Article {
 export namespace Manifest {
     export interface Article {
         title: string,
-        pub_time: number,
-        mod_time: number,
+        pub_time?: number,
+        mod_time?: number,
         content: string,
     };
 
@@ -41,7 +41,7 @@ export namespace Manifest {
     export interface ArticlesListItem {
         manifest: string,
         title: string,
-        pub_time: number,
+        pub_time?: number,
     }
 }
 
@@ -89,7 +89,7 @@ export function format_time(ts: number) {
     // return moment.unix(ts).format('YYYY/MM/DD hh:mm:ss')
 
     // Using `Date` instead of `moment` due to large output code size
-    let d = (new Date(ts * 1000))
+    let d = (new Date(ts))
     let YYYY = d.getFullYear().toString().padStart(4, '0')
     let MM = (d.getMonth() + 1).toString().padStart(2, '0')
     let DD = d.getDate().toString().padStart(2, '0')

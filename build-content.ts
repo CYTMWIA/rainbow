@@ -41,10 +41,10 @@ async function find_md_file(path: string) {
     if (stat.isDirectory()) {
         let subfiles = await readdir(path)
         let res = null
-        subfiles.forEach(file => {
-            let sub = find_md_file(join(path, file))
-            if (sub !== null) res = sub
-        });
+        await Promise.all(subfiles.map(async (file) => {
+            let sub = await find_md_file(join(path, file))
+            if (sub) res = sub
+        }))
         return res
     } else if (extname(path) == '.md')
         return path
@@ -55,8 +55,6 @@ async function parse_article_file(path: string): Promise<Article> {
     let result: Article = {
         fs_path: path,
         title: 'Untitled',
-        pub_time: 0,
-        mod_time: 0,
         content: '',
     }
     let raw = (await readFile(path)).toString('utf-8')
@@ -74,6 +72,17 @@ async function parse_article_file(path: string): Promise<Article> {
                 iv: encrypted.iv
             }
         }
+        ['pub_time', 'mod_time'].forEach((time) => {
+            if (meta[time]) {
+                if (typeof meta[time] === 'string') {
+                    (<any>result)[time] = Date.parse(meta[time])
+                } else if (typeof meta[time] === 'number') {
+                    (<any>result)[time] = meta[time]
+                } else {
+                    console.warn('Unknown type of time')
+                }
+            }
+        })
     } else result.content = raw
     return result
 }
@@ -86,7 +95,10 @@ async function process_article(path: string) {
         let inner = await find_md_file(path)
         if (inner)
             article_file = inner
-        else return null
+        else {
+            console.log(`Article not found in ${path}`)
+            return null
+        }
     }
 
     let article = await parse_article_file(article_file)
@@ -116,8 +128,8 @@ async function process_article(path: string) {
 
 let files = await readdir(content_dir)
 await Promise.all(files.map(async (filename) => {
-    if (filename === 'root') {
-        // copy files by bash script
+    if (['root', 'tmp'].includes(filename)) {
+        // files handled by bash script
         return null
     }
 
