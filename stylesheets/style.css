@@ -47,6 +47,10 @@ body {
     padding-left: 0.5em;
 }
 
+#content>h1 {
+    width: max-content;
+}
+
 .articles_list {
     padding-left: 0;
 }
@@ -75,6 +79,7 @@ body {
 
 article p {
     line-height: 1.6;
+    text-indent: 2em;
 }
 
 article img {
@@ -91,6 +96,7 @@ article img {
 
 article pre,
 article code {
+    width: max-content;
     background-color: lightgray;
     padding: .1em .4em;
     /* border-radius: 6px; */
