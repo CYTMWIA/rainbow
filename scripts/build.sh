@@ -10,5 +10,9 @@ rm -rf ./dist
 bun run ${ROOT}/build.ts
 cp -R -t ./dist ${ROOT}/stylesheets/*
 
+if [ -d content/root ]; then
+   cp -R -t ./dist content/root/*
+fi
+
 cd ./dist
 du -sh *
