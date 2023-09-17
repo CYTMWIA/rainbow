@@ -148,7 +148,7 @@ await Promise.all(files.map(async (filename) => {
                     })
             }
         }))
-        await output_manifest('_articles.json', articles)
+        await output_manifest('articles_list.json', articles)
     } else {
         await process_article(join(content_dir, filename))
     }

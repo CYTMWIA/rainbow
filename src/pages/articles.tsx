@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 function Content() {
     const [articles, set_articles] = useState<Manifest.ArticlesListItem[]>([])
 
-    let query = parse_query('_articles.json')
+    let query = parse_query('articles_list.json')
     useEffect(() => {
         fetch_manifest(query.manifest, query.password).then((manifest) => {
             set_articles(manifest)
