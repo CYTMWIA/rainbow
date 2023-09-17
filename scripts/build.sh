@@ -5,12 +5,10 @@ set -e
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 ROOT=$(dirname -- "${SCRIPT_DIR}")
 
-cd $ROOT
-
 rm -rf ./dist
 
-bun run build.ts
-cp -R -t ./dist ./stylesheets/*
+bun run ${ROOT}/build.ts
+cp -R -t ./dist ${ROOT}/stylesheets/*
 
 cd ./dist
 du -sh *
