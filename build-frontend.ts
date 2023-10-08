@@ -25,9 +25,21 @@ const pages = [
         stylesheets: ['style.css']
     },
     {
+        title: 'Tools',
+        entrypoint: join(__dirname, '/src/pages/Tools.tsx'),
+        path: 'tools.html',
+        stylesheets: ['style.css']
+    },
+    {
         title: 'Numbers In Text',
         entrypoint: join(__dirname, '/src/pages/numbers_in_text.tsx'),
         path: 'numbers_in_text.html',
+        stylesheets: ['style.css']
+    },
+    {
+        title: 'Timestamp',
+        entrypoint: join(__dirname, '/src/pages/timestamp.tsx'),
+        path: 'timestamp.html',
         stylesheets: ['style.css']
     },
 ]
