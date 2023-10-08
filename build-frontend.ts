@@ -14,21 +14,27 @@ const templates_dir = join(__dirname, 'templates')
 const pages = [
     {
         title: 'Index',
-        entrypoint: join(__dirname, '/src/pages/index.jsx'),
+        entrypoint: join(__dirname, '/src/pages/index.tsx'),
         path: 'index.html',
         stylesheets: ['style.css']
     },
     {
         title: 'Articles',
-        entrypoint: join(__dirname, '/src/pages/articles.jsx'),
+        entrypoint: join(__dirname, '/src/pages/articles.tsx'),
         path: 'articles.html',
         stylesheets: ['style.css']
-    }
+    },
+    {
+        title: 'Numbers In Text',
+        entrypoint: join(__dirname, '/src/pages/numbers_in_text.tsx'),
+        path: 'numbers_in_text.html',
+        stylesheets: ['style.css']
+    },
 ]
 
 // Build
 
-pages.forEach(async (page) => {
+await Promise.all(pages.map(async (page) => {
     let build_result: {
         scripts: string[]
     } = {
@@ -52,4 +58,4 @@ pages.forEach(async (page) => {
     let final = { ...page, ...build_result }
     let html = render(join(templates_dir, 'page.html'), final)
     await Bun.write(join(output_dir, page.path), html)
-})
+}))
