@@ -149,3 +149,20 @@ article td {
 article table tbody tr:nth-child(2n-1) {
     background-color: lightgray;
 }
+
+.numbers-in-text .numbers-in-text-result {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    row-gap: 0.2em;
+}
+
+.numbers-in-text .numbers-in-text-result>*:nth-child(4n-2),
+.numbers-in-text .numbers-in-text-result>*:nth-child(4n-3) {
+    background-color: lightgray;
+}
+
+.numbers-in-text .numbers-in-text-result>*:nth-child(2n-1) {
+    text-align: right;
+    font-weight: bold;
+    padding-right: 0.5em;
+}

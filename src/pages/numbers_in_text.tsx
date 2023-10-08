@@ -21,14 +21,14 @@ function App() {
     function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
         set_user_input(e.target.value)
     }
-    return <div>
+    return <div className="numbers-in-text">
         <textarea rows={8} cols={80} onChange={handleTextChange} />
-        <table>
-            <tr><th>Numbers</th><td>{number_strings.join(" ")}</td></tr>
-            <tr><th>Count</th><td>{numbers.length}</td></tr>
-            <tr><th>Sum</th><td>{sum}</td></tr>
-            <tr><th>Avg</th><td>{avg}</td></tr>
-        </table>
+        <div className="numbers-in-text-result">
+            <div>Numbers</div><div>{number_strings.join(" ")}</div>
+            <div>Count</div><div>{numbers.length}</div>
+            <div>Sum</div><div>{sum}</div>
+            <div>Avg</div><div>{avg}</div>
+        </div>
     </div>
 }
 
