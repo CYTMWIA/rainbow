@@ -22,10 +22,10 @@ function App() {
         set_user_input(e.target.value)
     }
     return <div>
-        <h1>Numbers In Text</h1>
         <textarea rows={8} cols={80} onChange={handleTextChange} />
         <table>
             <tr><th>Numbers</th><td>{number_strings.join(" ")}</td></tr>
+            <tr><th>Count</th><td>{numbers.length}</td></tr>
             <tr><th>Sum</th><td>{sum}</td></tr>
             <tr><th>Avg</th><td>{avg}</td></tr>
         </table>
