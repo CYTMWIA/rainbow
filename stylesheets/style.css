@@ -4,6 +4,11 @@ body {
     /* background-color: whitesmoke; */
 }
 
+a:visited,
+a:link {
+    color: black;
+}
+
 .menu {
     position: sticky;
     top: 2vh;
@@ -66,7 +71,6 @@ body {
 }
 
 .articles_list * {
-    text-decoration: none;
     font-size: 12pt;
 }
 
