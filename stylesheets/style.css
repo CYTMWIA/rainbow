@@ -156,6 +156,14 @@ article table tbody tr:nth-child(2n-1) {
     row-gap: 0.2em;
 }
 
+.numbers-in-text textarea {
+    /* https://stackoverflow.com/questions/271067/how-can-i-make-a-textarea-100-width-without-overflowing-when-padding-is-present */
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+}
+
 .numbers-in-text .numbers-in-text-result>*:nth-child(4n-2),
 .numbers-in-text .numbers-in-text-result>*:nth-child(4n-3) {
     background-color: lightgray;
