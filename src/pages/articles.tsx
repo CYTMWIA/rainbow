@@ -20,7 +20,7 @@ function Content() {
     }) // 按发布时间降序
     const list = articles.map((art) => {
         return <li key={art.manifest}>
-            <a href={`index.html?${art.manifest}`}>{art.title}</a>
+            <a href={`article.html?${art.manifest}`}>{art.title}</a>
             <div>{art.pub_time ? format_time(art.pub_time) : ''}</div>
         </li>
     })

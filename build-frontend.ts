@@ -7,46 +7,62 @@ import { render } from "nunjucks";
 
 const __dirname = import.meta.dir
 
+type PageDeclare = {
+    title: string,
+    entrypoint: string,
+    stylesheets?: string[],
+    path?: string,
+}
+type Page = Required<PageDeclare>
+
 // Configs
 
 const output_dir = 'dist'
 const templates_dir = join(__dirname, 'templates')
-const pages = [
+const pages: PageDeclare[] = [
+    // Blog
     {
         title: 'Index',
-        entrypoint: join(__dirname, '/src/pages/index.tsx'),
-        path: 'index.html',
-        stylesheets: ['style.css']
+        entrypoint: join(__dirname, '/src/pages/article.tsx'),
+    },
+    {
+        title: 'Article',
+        entrypoint: join(__dirname, '/src/pages/article.tsx'),
     },
     {
         title: 'Articles',
         entrypoint: join(__dirname, '/src/pages/articles.tsx'),
-        path: 'articles.html',
-        stylesheets: ['style.css']
     },
+    // Tools
     {
         title: 'Tools',
-        entrypoint: join(__dirname, '/src/pages/Tools.tsx'),
-        path: 'tools.html',
-        stylesheets: ['style.css']
+        entrypoint: join(__dirname, '/src/pages/tools.tsx'),
     },
     {
         title: 'Numbers In Text',
         entrypoint: join(__dirname, '/src/pages/numbers_in_text.tsx'),
-        path: 'numbers_in_text.html',
-        stylesheets: ['style.css']
     },
     {
         title: 'Timestamp',
         entrypoint: join(__dirname, '/src/pages/timestamp.tsx'),
-        path: 'timestamp.html',
-        stylesheets: ['style.css']
     },
 ]
+const default_page_value = {
+    stylesheets: ['style.css'],
+    path: (page: PageDeclare) => {
+        return page.title.toLocaleLowerCase().replaceAll(' ', '_') + '.html'
+    }
+}
 
 // Build
 
-await Promise.all(pages.map(async (page) => {
+await Promise.all(pages.map(async (page_declare) => {
+    let page: Page = {
+        title: page_declare.title,
+        entrypoint: page_declare.entrypoint,
+        stylesheets: page_declare.stylesheets ? page_declare.stylesheets : default_page_value.stylesheets,
+        path: page_declare.path ? page_declare.path : default_page_value.path(page_declare)
+    }
     let build_result: {
         scripts: string[]
     } = {
