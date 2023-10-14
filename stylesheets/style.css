@@ -1,7 +1,17 @@
 body {
     display: flex;
-    min-height: 150vh;
-    /* background-color: whitesmoke; */
+    flex-direction: column;
+}
+
+body>* {
+    max-width: 80ch;
+
+    width: -moz-available;
+    width: -webkit-fill-available;
+    width: stretch;
+
+    margin-left: auto;
+    margin-right: auto;
 }
 
 a:visited,
@@ -10,14 +20,10 @@ a:link {
 }
 
 .menu {
-    position: sticky;
-    top: 2vh;
     display: flex;
-    flex-direction: column;
-    width: max-content;
-    height: 96vh;
-    text-align: right;
-    border-right: solid 2px;
+    flex-wrap: wrap;
+    text-align: center;
+    border-bottom: solid 2px;
 }
 
 /* first-of-class
@@ -25,13 +31,15 @@ a:link {
  */
 
 .menu .bottom {
-    margin-top: auto;
-
+    /* margin-top: auto; */
+    margin-left: auto;
 }
 
 .menu .bottom~.bottom {
-    margin-top: 0;
-    margin-bottom: 0;
+    /* margin-top: 0; */
+    /* margin-bottom: 0; */
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .menu>* {
@@ -45,11 +53,6 @@ a:link {
     color: white;
     background-color: black;
     animation-play-state: running;
-}
-
-#content {
-    width: 50%;
-    padding-left: 0.5em;
 }
 
 #content>h1 {
