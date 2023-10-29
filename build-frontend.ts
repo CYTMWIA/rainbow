@@ -23,15 +23,23 @@ const pages: PageDeclare[] = [
     // Blog
     {
         title: 'Index',
-        entrypoint: join(__dirname, '/src/pages/article.tsx'),
+        entrypoint: join(__dirname, '/src/pages/index.tsx'),
     },
     {
         title: 'Article',
-        entrypoint: join(__dirname, '/src/pages/article.tsx'),
+        entrypoint: join(__dirname, '/src/pages/index.tsx'),
     },
     {
         title: 'Articles',
-        entrypoint: join(__dirname, '/src/pages/articles.tsx'),
+        entrypoint: join(__dirname, '/src/pages/index.tsx'),
+    },
+    {
+        title: 'Links',
+        entrypoint: join(__dirname, '/src/pages/index.tsx'),
+    },
+    {
+        title: 'About',
+        entrypoint: join(__dirname, '/src/pages/index.tsx'),
     },
     // Tools
     {

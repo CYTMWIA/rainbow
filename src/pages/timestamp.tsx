@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { mount_app } from "../common";
+import { Rainbow } from "../components/rainbow";
 
 let interval: Timer | undefined = undefined
 function Display() {
@@ -13,4 +14,4 @@ function Display() {
     return <h1>{timestamp}</h1>
 }
 
-mount_app(<Display></Display>)
+mount_app(<Rainbow><Display></Display></Rainbow>)

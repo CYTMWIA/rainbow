@@ -107,12 +107,12 @@ export function random_background_color() {
 }
 
 export function mount_app(node: React.ReactNode) {
-    const mount_point = document.getElementById('content')
+    const mount_point = document.getElementById('rainbow-root')
     if (mount_point !== null) {
         const root = createRoot(mount_point)
         root.render(node)
     }
-    else console.log("document.getElementById('content') failed!")
+    else console.log("document.getElementById('rainbow-root') failed!")
 }
 
 export function add_script_node(src: string, opt?: { async_?: boolean, defer?: boolean }) {

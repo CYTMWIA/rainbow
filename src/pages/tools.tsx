@@ -1,4 +1,5 @@
 import { mount_app } from "../common";
+import { Rainbow } from "../components/rainbow";
 
 let tools = [
     {
@@ -19,4 +20,4 @@ function List() {
     </>
 }
 
-mount_app(<List></List>)
+mount_app(<Rainbow><List></List></Rainbow>)

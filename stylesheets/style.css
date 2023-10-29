@@ -47,6 +47,8 @@ a:link {
     text-decoration: none;
     color: black;
     /* font-weight: bold; */
+    cursor: pointer;
+    user-select: none;
 }
 
 .menu>*:hover {
@@ -75,6 +77,10 @@ a:link {
 
 .articles_list * {
     font-size: 12pt;
+}
+
+.articles_list>*>*:first-child {
+    cursor: pointer;
 }
 
 .articles_list>*>*:last-child {

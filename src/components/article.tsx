@@ -1,10 +1,8 @@
-import axios from 'axios';
-import { Manifest, add_script_node, fetch_manifest, mount_app, parse_query } from '../common';
-import { decrypt } from '../crypto';
-import { useEffect, useState } from 'react';
 import { marked } from 'marked';
+import { useEffect, useState } from 'react';
+import { Manifest, add_script_node, fetch_manifest, parse_query } from '../common';
 
-function Content() {
+export function Article(props: { manifest?: string }) {
     const [article, set_article] = useState<Manifest.Article>({
         title: 'Loading...',
         pub_time: 0,
@@ -13,15 +11,17 @@ function Content() {
     })
 
     let query = parse_query('index.json')
+    let manifest_file = props.manifest ? props.manifest : query.manifest
+    if (!manifest_file.endsWith('.json')) manifest_file += '.json'
     useEffect(() => {
-        fetch_manifest(query.manifest, query.password).then((manifest) => {
+        fetch_manifest(manifest_file, query.password).then((manifest) => {
             set_article(manifest)
 
             // https://www.mathjax.org/#gettingstarted
             add_script_node('https://polyfill.io/v3/polyfill.min.js?features=es6')
             add_script_node('https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js', { async_: true })
         })
-    }, [query.manifest]);
+    }, [manifest_file]);
 
     document.title = article.title
 
@@ -29,10 +29,8 @@ function Content() {
         gfm: true,
     });
     const article_html = { __html: marked.parse(article.content) }
-    return (<>
+    return <>
         <h1>{article.title}</h1>
         <article dangerouslySetInnerHTML={article_html}></article >
-    </>)
+    </>
 }
-
-mount_app(<Content></Content>)

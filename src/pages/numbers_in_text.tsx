@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { mount_app } from "../common";
+import { Rainbow } from "../components/rainbow";
 
 function App() {
     const [user_input, set_user_input] = useState("")
@@ -32,4 +33,4 @@ function App() {
     </div>
 }
 
-mount_app(<App></App>)
+mount_app(<Rainbow><App></App></Rainbow>)

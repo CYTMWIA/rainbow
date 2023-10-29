@@ -1,17 +1,17 @@
-import axios from 'axios';
-import { Manifest, fetch_manifest, format_time, mount_app, parse_query } from '../common';
-import { decrypt } from '../crypto';
 import { useEffect, useState } from 'react';
+import { Manifest, fetch_manifest, format_time, parse_query } from '../common';
 
-function Content() {
+export function ArticleList(props: { manifest?: string, setArticle: (arg0: string) => void }) {
     const [articles, set_articles] = useState<Manifest.ArticlesListItem[]>([])
 
     let query = parse_query('articles_list.json')
+    let manifest_file = props.manifest ? props.manifest : query.manifest
+    if (!manifest_file.endsWith('.json')) manifest_file += '.json'
     useEffect(() => {
-        fetch_manifest(query.manifest, query.password).then((manifest) => {
+        fetch_manifest(manifest_file, query.password).then((manifest) => {
             set_articles(manifest)
         })
-    }, [query.manifest]);
+    }, [manifest_file]);
 
     articles.sort((a, b) => {
         let at = a.pub_time ? a.pub_time : 0
@@ -20,7 +20,7 @@ function Content() {
     }) // 按发布时间降序
     const list = articles.map((art) => {
         return <li key={art.manifest}>
-            <a href={`article.html?${art.manifest}`}>{art.title}</a>
+            <div onClick={() => props.setArticle(art.manifest)}>{art.title}</div>
             <div>{art.pub_time ? format_time(art.pub_time) : ''}</div>
         </li>
     })
@@ -29,5 +29,3 @@ function Content() {
         <ul className="articles_list">{list}</ul>
     </>
 }
-
-mount_app(<Content></Content>)
