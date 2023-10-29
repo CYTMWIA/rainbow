@@ -1,8 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Manifest, fetch_manifest, format_time, parse_query } from '../common';
+import { RainbowContext } from './rainbow';
 
-export function ArticleList(props: { manifest?: string, setArticle: (arg0: string) => void }) {
+export function ArticleList(props: { manifest?: string }) {
+    const rainbow = useContext(RainbowContext)
     const [articles, set_articles] = useState<Manifest.ArticlesListItem[]>([])
+
+    document.title = 'Articles List'
 
     let query = parse_query('articles_list.json')
     let manifest_file = props.manifest ? props.manifest : query.manifest
@@ -20,7 +24,7 @@ export function ArticleList(props: { manifest?: string, setArticle: (arg0: strin
     }) // 按发布时间降序
     const list = articles.map((art) => {
         return <li key={art.manifest}>
-            <div onClick={() => props.setArticle(art.manifest)}>{art.title}</div>
+            <div onClick={() => rainbow.setPath("/article.html?" + art.manifest)}>{art.title}</div>
             <div>{art.pub_time ? format_time(art.pub_time) : ''}</div>
         </li>
     })
