@@ -94,10 +94,10 @@ article p {
     line-height: 1.6;
 }
 
-article>p,
+/* article>p,
 article>blockquote>p {
     text-indent: 2em;
-}
+} */
 
 article img {
     max-width: 100%;
