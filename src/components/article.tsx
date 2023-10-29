@@ -1,6 +1,7 @@
 import { marked } from 'marked';
 import { useEffect, useState } from 'react';
 import { Manifest, add_script_node, fetch_manifest, parse_query } from '../common';
+import Heti from 'heti/js/heti-addon.js'
 
 export function Article(props: { manifest?: string }) {
     const [article, set_article] = useState<Manifest.Article>({
@@ -21,7 +22,11 @@ export function Article(props: { manifest?: string }) {
             add_script_node('https://polyfill.io/v3/polyfill.min.js?features=es6')
             add_script_node('https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js', { async_: true })
         })
-    }, [manifest_file]);
+    }, [manifest_file])
+    useEffect(() => {
+        const heti = new Heti('.heti')
+        heti.autoSpacing()
+    }) // run the effect after every render
 
     document.title = article.title
 
@@ -31,6 +36,6 @@ export function Article(props: { manifest?: string }) {
     const article_html = { __html: marked.parse(article.content) }
     return <>
         <h1>{article.title}</h1>
-        <article dangerouslySetInnerHTML={article_html}></article >
+        <article dangerouslySetInnerHTML={article_html} className='heti heti--sans'></article >
     </>
 }

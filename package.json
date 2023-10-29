@@ -12,10 +12,12 @@
     "@types/nunjucks": "^3.2.3",
     "@types/react-dom": "^18.2.7",
     "axios": "^1.5.0",
+    "heti": "^0.9.4",
     "marked": "^9.0.1",
     "nunjucks": "^3.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "sass": "^1.69.5",
     "yaml": "^2.3.2"
   }
 }

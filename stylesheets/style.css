@@ -4,7 +4,8 @@ body {
 }
 
 body>* {
-    max-width: 80ch;
+    /* 与 heti 的设置相同（node_modules/heti/lib/heti.scss） */
+    max-width: 42em;
 
     width: -moz-available;
     width: -webkit-fill-available;
@@ -17,6 +18,11 @@ body>* {
 a:visited,
 a:link {
     color: black;
+
+    /* 从 heti 抄的，用于始终显示链接的下划线 */
+    padding-block-end: 1px;
+    border-block-end: 1px solid currentColor;
+    text-decoration: none;
 }
 
 .menu {
@@ -89,15 +95,6 @@ a:link {
 }
 
 /* Markdown */
-
-article p {
-    line-height: 1.6;
-}
-
-/* article>p,
-article>blockquote>p {
-    text-indent: 2em;
-} */
 
 article img {
     max-width: 100%;

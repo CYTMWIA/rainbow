@@ -4,6 +4,7 @@
 
 import { basename, join } from "path";
 import { render } from "nunjucks";
+import { compile as compileSass } from "sass";
 
 const __dirname = import.meta.dir
 
@@ -63,6 +64,11 @@ const default_page_value = {
 }
 
 // Build
+
+// Merge CSS
+let final_css = (await Bun.file(join(__dirname, 'stylesheets/style.css')).text()) + '\n'
+final_css += compileSass(join(__dirname, 'node_modules/heti/lib/heti.scss')).css + '\n'
+await Bun.write(join(output_dir, 'style.css'), final_css)
 
 await Promise.all(pages.map(async (page_declare) => {
     let page: Page = {
