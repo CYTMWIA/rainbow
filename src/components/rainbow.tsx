@@ -96,7 +96,7 @@ export function Rainbow(props: { children?: ReactNode }) {
     const [path, setPath] = useState(window.location.pathname + window.location.search)
     window.history.pushState(path, "", path)
     window.onpopstate = () => {
-        setPath(window.location.pathname)
+        setPath(window.location.pathname + window.location.search)
     }
 
     return <>
