@@ -62,37 +62,37 @@ function Content(props: { children?: ReactNode }) {
     const [content, setContent] = useState(props.children ? props.children : <></>)
     const [animationClassName, onAnimationEnd, setAnimationClassName, triggerAnimation] = useAnimation('animation-fade-in')
 
-    const routes = [
-        { pattern: "/", content: <Article manifest={'index'}></Article> },
-        { pattern: "/index", content: <Article manifest={'index'}></Article> },
-        { pattern: "/article", content: <Article></Article> },
-        { pattern: "/articles", content: <ArticleList manifest='articles_list.json'></ArticleList> },
-        { pattern: "/links", content: <Article manifest={'links'}></Article> },
-        { pattern: "/about", content: <Article manifest={'about'}></Article> },
-    ]
-    let path_parts = split_path(path)
-    let matched_idx = -1
-    for (let r = 0; r < routes.length && matched_idx < 0; r += 1) {
-        let route = routes[r]
-        let pattern_parts = split_path(route.pattern)
-        let m = 0, args: any = {}, all_matched = path_parts.length == pattern_parts.length
-        for (m = 0; m < pattern_parts.length && all_matched; m += 1) {
-            if (!path_parts[m]) {
-                all_matched = false
-            }
-            let arg = pattern_parts[m].match(/<(.*?)>/)
-            if (arg) {
-                args[arg[1]] = path_parts[m]
-            } else if (path_parts[m] === pattern_parts[m]) {
-            } else {
-                all_matched = false
-            }
-        }
-        if (all_matched) {
-            matched_idx = r
-        }
-    }
     useEffect(() => {
+        const routes = [
+            { pattern: "/", content: <Article manifest={'index'}></Article> },
+            { pattern: "/index", content: <Article manifest={'index'}></Article> },
+            { pattern: "/article", content: <Article></Article> },
+            { pattern: "/articles", content: <ArticleList manifest='articles_list.json'></ArticleList> },
+            { pattern: "/links", content: <Article manifest={'links'}></Article> },
+            { pattern: "/about", content: <Article manifest={'about'}></Article> },
+        ]
+        let path_parts = split_path(path)
+        let matched_idx = -1
+        for (let r = 0; r < routes.length && matched_idx < 0; r += 1) {
+            let route = routes[r]
+            let pattern_parts = split_path(route.pattern)
+            let m = 0, args: any = {}, all_matched = path_parts.length == pattern_parts.length
+            for (m = 0; m < pattern_parts.length && all_matched; m += 1) {
+                if (!path_parts[m]) {
+                    all_matched = false
+                }
+                let arg = pattern_parts[m].match(/<(.*?)>/)
+                if (arg) {
+                    args[arg[1]] = path_parts[m]
+                } else if (path_parts[m] === pattern_parts[m]) {
+                } else {
+                    all_matched = false
+                }
+            }
+            if (all_matched) {
+                matched_idx = r
+            }
+        }
         if (matched_idx >= 0) {
             triggerAnimation('animation-fade-out', () => {
                 setAnimationClassName('animation-fade-in')
