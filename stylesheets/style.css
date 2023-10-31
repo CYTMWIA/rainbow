@@ -158,13 +158,17 @@ article table tbody tr:nth-child(2n-1) {
 
 /* 动画 */
 
-.animation-fade-in.menu {
+.menu,
+.content {
     opacity: 0;
-    animation-delay: 1.5s;
+}
+
+.animation-fade-in.menu {
+    animation-delay: 0.75s;
 }
 
 .animation-fade-in {
-    animation: .5s linear fade-in forwards;
+    animation: .4s linear fade-in forwards;
 }
 
 @keyframes fade-in {
@@ -178,7 +182,7 @@ article table tbody tr:nth-child(2n-1) {
 }
 
 .animation-fade-out {
-    animation: .5s linear fade-out forwards;
+    animation: .2s linear fade-out forwards;
 }
 
 @keyframes fade-out {

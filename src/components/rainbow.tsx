@@ -40,27 +40,27 @@ function Menu() {
 function useAnimation(initAnimationClassName: string): [
     string,
     (e: React.AnimationEvent<HTMLDivElement>) => void,
-    (animationClassName: string, newAnimationClassName: string, onEnd?: () => void) => void
+    React.Dispatch<SetStateAction<string>>,
+    (animationClassName: string, onEnd?: () => void) => void
 ] {
     const [animationClassName, setAnimationClassName] = useState(initAnimationClassName)
     const [onAnimationEnd, setOnAnimationEnd_] = useState(() => (e: React.AnimationEvent<HTMLDivElement>) => { })
     const setOnAnimationEnd = (fun: (e: React.AnimationEvent<HTMLDivElement>) => void) => setOnAnimationEnd_(() => fun)
 
-    const triggerAnimation = (animationClassName: string, newAnimationClassName: string, onEnd?: () => void) => {
+    const triggerAnimation = (animationClassName: string, onEnd?: () => void) => {
         setAnimationClassName(animationClassName)
         setOnAnimationEnd((e) => {
-            setAnimationClassName(newAnimationClassName)
             onEnd?.()
         })
     }
 
-    return [animationClassName, onAnimationEnd, triggerAnimation]
+    return [animationClassName, onAnimationEnd, setAnimationClassName, triggerAnimation]
 }
 
 function Content(props: { children?: ReactNode }) {
     const { path } = useContext(RainbowContext)
     const [content, setContent] = useState(props.children ? props.children : <></>)
-    const [animationClassName, onAnimationEnd, triggerAnimation] = useAnimation('animation-fade-in')
+    const [animationClassName, onAnimationEnd, setAnimationClassName, triggerAnimation] = useAnimation('animation-fade-in')
 
     const routes = [
         { pattern: "/index", content: <Article manifest={'index'}></Article> },
@@ -92,15 +92,12 @@ function Content(props: { children?: ReactNode }) {
         }
     }
     useEffect(() => {
-        triggerAnimation('animation-fade-out', 'animation-fade-in', () => {
-            if (matched_idx < 0) {
-                if (!props.children) {
-                    setContent(<Article manifest={'index'}></Article>)
-                }
-            } else {
+        if (matched_idx >= 0) {
+            triggerAnimation('animation-fade-out', () => {
+                setAnimationClassName('animation-fade-in')
                 setContent(routes[matched_idx].content)
-            }
-        })
+            })
+        }
     }, [path])
 
     return <div className={'content ' + animationClassName} onAnimationEnd={onAnimationEnd}>{content}</div>
