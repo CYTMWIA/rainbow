@@ -63,6 +63,7 @@ function Content(props: { children?: ReactNode }) {
     const [animationClassName, onAnimationEnd, setAnimationClassName, triggerAnimation] = useAnimation('animation-fade-in')
 
     const routes = [
+        { pattern: "/", content: <Article manifest={'index'}></Article> },
         { pattern: "/index", content: <Article manifest={'index'}></Article> },
         { pattern: "/article", content: <Article></Article> },
         { pattern: "/articles", content: <ArticleList manifest='articles_list.json'></ArticleList> },
@@ -74,9 +75,10 @@ function Content(props: { children?: ReactNode }) {
     for (let r = 0; r < routes.length && matched_idx < 0; r += 1) {
         let route = routes[r]
         let pattern_parts = split_path(route.pattern)
-        let m = 0, args: any = {}
+        let m = 0, args: any = {}, all_matched = true
         for (m = 0; m < pattern_parts.length; m += 1) {
             if (!path_parts[m]) {
+                all_matched = false
                 break
             }
             let arg = pattern_parts[m].match(/<(.*?)>/)
@@ -84,11 +86,12 @@ function Content(props: { children?: ReactNode }) {
                 args[arg[1]] = path_parts[m]
             } else if (path_parts[m] === pattern_parts[m]) {
             } else {
+                all_matched = false
                 break
             }
-            if (m === pattern_parts.length - 1) {
-                matched_idx = r
-            }
+        }
+        if (all_matched) {
+            matched_idx = r
         }
     }
     useEffect(() => {
