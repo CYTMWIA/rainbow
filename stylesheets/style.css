@@ -156,6 +156,43 @@ article table tbody tr:nth-child(2n-1) {
     background-color: lightgray;
 }
 
+/* 动画 */
+
+.animation-fade-in.menu {
+    opacity: 0;
+    animation-delay: 1.5s;
+}
+
+.animation-fade-in {
+    animation: .5s linear fade-in forwards;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.animation-fade-out {
+    animation: .5s linear fade-out forwards;
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+/* 其它 */
+
 .numbers-in-text .numbers-in-text-result {
     display: grid;
     grid-template-columns: 1fr 2fr;

@@ -1,18 +1,6 @@
-import { ReactNode, SetStateAction, createContext, useContext, useState } from 'react';
+import { ReactNode, SetStateAction, createContext, useContext, useEffect, useState } from 'react';
 import { Article } from './article';
 import { ArticleList } from './article_list';
-
-function Index() {
-    return <Article manifest={'index'}></Article>
-}
-
-function Links() {
-    return <Article manifest={'links'}></Article>
-}
-
-function About() {
-    return <Article manifest={'about'}></Article>
-}
 
 function split_path(path: string) {
     path = /[^\?]*/.exec(path)?.[0] ?? ''
@@ -28,7 +16,7 @@ function split_path(path: string) {
 
 interface RainbowContext {
     path: string,
-    setPath: React.Dispatch<React.SetStateAction<string>>
+    setPath: React.Dispatch<SetStateAction<string>>
 }
 
 export const RainbowContext = createContext<RainbowContext>({
@@ -41,7 +29,7 @@ export const RainbowContext = createContext<RainbowContext>({
 function Menu() {
     const rainbow = useContext(RainbowContext)
 
-    return <div className='menu'>
+    return <div className='menu animation-fade-in'>
         <div onClick={() => rainbow.setPath('/index.html')}>Home</div>
         <div onClick={() => rainbow.setPath('/articles.html')}>Articles</div>
         <div onClick={() => rainbow.setPath('/links.html')}>Links</div>
@@ -49,18 +37,39 @@ function Menu() {
     </div>
 }
 
-function Content(props: { children?: ReactNode }) {
-    const rainbow = useContext(RainbowContext)
+function useAnimation(initAnimationClassName: string): [
+    string,
+    (e: React.AnimationEvent<HTMLDivElement>) => void,
+    (animationClassName: string, newAnimationClassName: string, onEnd?: () => void) => void
+] {
+    const [animationClassName, setAnimationClassName] = useState(initAnimationClassName)
+    const [onAnimationEnd, setOnAnimationEnd_] = useState(() => (e: React.AnimationEvent<HTMLDivElement>) => { })
+    const setOnAnimationEnd = (fun: (e: React.AnimationEvent<HTMLDivElement>) => void) => setOnAnimationEnd_(() => fun)
 
-    let content = props.children ? props.children : <></>
+    const triggerAnimation = (animationClassName: string, newAnimationClassName: string, onEnd?: () => void) => {
+        setAnimationClassName(animationClassName)
+        setOnAnimationEnd((e) => {
+            setAnimationClassName(newAnimationClassName)
+            onEnd?.()
+        })
+    }
+
+    return [animationClassName, onAnimationEnd, triggerAnimation]
+}
+
+function Content(props: { children?: ReactNode }) {
+    const { path } = useContext(RainbowContext)
+    const [content, setContent] = useState(props.children ? props.children : <></>)
+    const [animationClassName, onAnimationEnd, triggerAnimation] = useAnimation('animation-fade-in')
+
     const routes = [
-        { pattern: "/index", content: <Index></Index> },
+        { pattern: "/index", content: <Article manifest={'index'}></Article> },
         { pattern: "/article", content: <Article></Article> },
-        { pattern: "/articles", content: <ArticleList></ArticleList> },
-        { pattern: "/links", content: <Links></Links> },
-        { pattern: "/about", content: <About></About> },
+        { pattern: "/articles", content: <ArticleList manifest='articles_list.json'></ArticleList> },
+        { pattern: "/links", content: <Article manifest={'links'}></Article> },
+        { pattern: "/about", content: <Article manifest={'about'}></Article> },
     ]
-    let path_parts = split_path(rainbow.path)
+    let path_parts = split_path(path)
     let matched_idx = -1
     for (let r = 0; r < routes.length && matched_idx < 0; r += 1) {
         let route = routes[r]
@@ -82,14 +91,19 @@ function Content(props: { children?: ReactNode }) {
             }
         }
     }
-    if (matched_idx < 0) {
-        if (!props.children)
-            content = <Index></Index>
-    } else {
-        content = routes[matched_idx].content
-    }
+    useEffect(() => {
+        triggerAnimation('animation-fade-out', 'animation-fade-in', () => {
+            if (matched_idx < 0) {
+                if (!props.children) {
+                    setContent(<Article manifest={'index'}></Article>)
+                }
+            } else {
+                setContent(routes[matched_idx].content)
+            }
+        })
+    }, [path])
 
-    return <div className='content'>{content}</div>
+    return <div className={'content ' + animationClassName} onAnimationEnd={onAnimationEnd}>{content}</div>
 }
 
 export function Rainbow(props: { children?: ReactNode }) {
