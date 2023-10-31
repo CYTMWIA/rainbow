@@ -75,11 +75,10 @@ function Content(props: { children?: ReactNode }) {
     for (let r = 0; r < routes.length && matched_idx < 0; r += 1) {
         let route = routes[r]
         let pattern_parts = split_path(route.pattern)
-        let m = 0, args: any = {}, all_matched = true
-        for (m = 0; m < pattern_parts.length; m += 1) {
+        let m = 0, args: any = {}, all_matched = path_parts.length == pattern_parts.length
+        for (m = 0; m < pattern_parts.length && all_matched; m += 1) {
             if (!path_parts[m]) {
                 all_matched = false
-                break
             }
             let arg = pattern_parts[m].match(/<(.*?)>/)
             if (arg) {
@@ -87,7 +86,6 @@ function Content(props: { children?: ReactNode }) {
             } else if (path_parts[m] === pattern_parts[m]) {
             } else {
                 all_matched = false
-                break
             }
         }
         if (all_matched) {
