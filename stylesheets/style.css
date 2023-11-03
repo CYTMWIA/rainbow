@@ -173,10 +173,12 @@ article table tbody tr:nth-child(2n-1) {
 @keyframes fade-in {
     0% {
         opacity: 0;
+        transform: rotateY(180deg);
     }
 
     100% {
         opacity: 1;
+        transform: rotateY(0deg);
     }
 }
 
@@ -187,10 +189,12 @@ article table tbody tr:nth-child(2n-1) {
 @keyframes fade-out {
     0% {
         opacity: 1;
+        transform: rotateY(0deg);
     }
 
     100% {
         opacity: 0;
+        transform: rotateY(180deg);
     }
 }
 
