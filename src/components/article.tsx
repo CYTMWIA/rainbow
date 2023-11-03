@@ -1,7 +1,8 @@
+import Heti from 'heti/js/heti-addon.js';
 import { marked } from 'marked';
 import { useEffect, useState } from 'react';
-import { Manifest, add_script_node, fetch_manifest, parse_query } from '../common';
-import Heti from 'heti/js/heti-addon.js'
+import { Manifest, fetch_manifest, parse_query } from '../common';
+import { FadeInOut } from './fade_in_out';
 
 export function Article(props: { manifest?: string }) {
     const [article, set_article] = useState<Manifest.Article>({
@@ -19,8 +20,8 @@ export function Article(props: { manifest?: string }) {
             set_article(manifest)
 
             // https://www.mathjax.org/#gettingstarted
-            add_script_node('https://polyfill.io/v3/polyfill.min.js?features=es6')
-            add_script_node('https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js', { async_: true })
+            // add_script_node('https://polyfill.io/v3/polyfill.min.js?features=es6')
+            // add_script_node('https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js', { async_: true })
         })
     }, [manifest_file])
     useEffect(() => {
@@ -34,8 +35,8 @@ export function Article(props: { manifest?: string }) {
         gfm: true,
     });
     const article_html = { __html: marked.parse(article.content) }
-    return <>
+    return <FadeInOut>
         <h1>{article.title}</h1>
         <article dangerouslySetInnerHTML={article_html} className='heti heti--sans'></article >
-    </>
+    </FadeInOut>
 }

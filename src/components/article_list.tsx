@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { Manifest, fetch_manifest, format_time, parse_query } from '../common';
 import { RainbowContext } from './rainbow';
+import { FadeInOut } from './fade_in_out';
 
 export function ArticleList(props: { manifest?: string }) {
     const rainbow = useContext(RainbowContext)
@@ -28,8 +29,8 @@ export function ArticleList(props: { manifest?: string }) {
             <div>{art.pub_time ? format_time(art.pub_time) : ''}</div>
         </li>
     })
-    return <>
+    return <FadeInOut>
         <h1>Articles List</h1>
         <ul className="articles_list">{list}</ul>
-    </>
+    </FadeInOut>
 }

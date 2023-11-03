@@ -1,6 +1,7 @@
 import { ReactNode, SetStateAction, createContext, useContext, useEffect, useState } from 'react';
 import { Article } from './article';
 import { ArticleList } from './article_list';
+import { FadeInOut } from './fade_in_out';
 
 function split_path(path: string) {
     path = /[^\?]*/.exec(path)?.[0] ?? ''
@@ -37,30 +38,9 @@ function Menu() {
     </div>
 }
 
-function useAnimation(initAnimationClassName: string): [
-    string,
-    (e: React.AnimationEvent<HTMLDivElement>) => void,
-    React.Dispatch<SetStateAction<string>>,
-    (animationClassName: string, onEnd?: () => void) => void
-] {
-    const [animationClassName, setAnimationClassName] = useState(initAnimationClassName)
-    const [onAnimationEnd, setOnAnimationEnd_] = useState(() => (e: React.AnimationEvent<HTMLDivElement>) => { })
-    const setOnAnimationEnd = (fun: (e: React.AnimationEvent<HTMLDivElement>) => void) => setOnAnimationEnd_(() => fun)
-
-    const triggerAnimation = (animationClassName: string, onEnd?: () => void) => {
-        setAnimationClassName(animationClassName)
-        setOnAnimationEnd((e) => {
-            onEnd?.()
-        })
-    }
-
-    return [animationClassName, onAnimationEnd, setAnimationClassName, triggerAnimation]
-}
-
 function Content(props: { children?: ReactNode }) {
     const { path } = useContext(RainbowContext)
     const [content, setContent] = useState(props.children ? props.children : <></>)
-    const [animationClassName, onAnimationEnd, setAnimationClassName, triggerAnimation] = useAnimation('animation-fade-in')
 
     useEffect(() => {
         const routes = [
@@ -94,14 +74,11 @@ function Content(props: { children?: ReactNode }) {
             }
         }
         if (matched_idx >= 0) {
-            triggerAnimation('animation-fade-out', () => {
-                setAnimationClassName('animation-fade-in')
-                setContent(routes[matched_idx].content)
-            })
+            setContent(routes[matched_idx].content)
         }
     }, [path])
 
-    return <div className={'content ' + animationClassName} onAnimationEnd={onAnimationEnd}>{content}</div>
+    return <FadeInOut><div className='content'>{content}</div></FadeInOut>
 }
 
 export function Rainbow(props: { children?: ReactNode }) {
