@@ -16,7 +16,7 @@ function split_path(path: string) {
 
 interface RainbowContext {
     path: string,
-    setPath: React.Dispatch<SetStateAction<string>>
+    setPath: (path: string) => void
 }
 
 export const RainbowContext = createContext<RainbowContext>({
@@ -105,10 +105,13 @@ function Content(props: { children?: ReactNode }) {
 }
 
 export function Rainbow(props: { children?: ReactNode }) {
-    const [path, setPath] = useState(window.location.pathname + window.location.search)
-    window.history.pushState(path, "", path)
+    const [path, setPathRaw] = useState(window.location.pathname + window.location.search)
+    const setPath = (path: string) => {
+        setPathRaw(path)
+        window.history.pushState(path, "", path)
+    }
     window.onpopstate = () => {
-        setPath(window.location.pathname + window.location.search)
+        setPathRaw(window.location.pathname + window.location.search)
     }
 
     return <>
